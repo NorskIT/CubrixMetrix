@@ -71,35 +71,36 @@ public:
          * of 0,0 of current chunk
          */
         int currentPlayerChunkX= (int)((floor(playerPos.x))/CHUNK_WIDTH)*CHUNK_WIDTH;
-        int currentPlayerChunkY= (int)((floor(playerPos.z))/CHUNK_WIDTH)*CHUNK_WIDTH;
+        int currentPlayerChunkZ= (int)((floor(playerPos.z)) / CHUNK_WIDTH) * CHUNK_WIDTH;
+
 
         if(currentPlayerChunkX < playerChunkPos.x)
         {
-            generateChunk(LEFT, currentPlayerChunkX, currentPlayerChunkY);
-            std::cout << "Player move LEFT to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkY << std::endl;
+            generateChunk(LEFT, currentPlayerChunkX, currentPlayerChunkZ);
+            std::cout << "Player move LEFT to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkZ << std::endl;
         }
         if(currentPlayerChunkX > playerChunkPos.x)
         {
-            generateChunk(RIGHT, currentPlayerChunkX, currentPlayerChunkY);
-            std::cout << "Player move RIGHT to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkY << std::endl;
+            generateChunk(RIGHT, currentPlayerChunkX, currentPlayerChunkZ);
+            std::cout << "Player move RIGHT to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkZ << std::endl;
         }
-        if(currentPlayerChunkY > playerChunkPos.y)
+        if(currentPlayerChunkZ > playerChunkPos.y)
         {
-            generateChunk(UP, currentPlayerChunkX, currentPlayerChunkY);
-            std::cout << "Player move UP to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkY << std::endl;
+            generateChunk(UP, currentPlayerChunkX, currentPlayerChunkZ);
+            std::cout << "Player move UP to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkZ << std::endl;
         }
-        if(currentPlayerChunkY < playerChunkPos.y)
+        if(currentPlayerChunkZ < playerChunkPos.y)
         {
-            generateChunk(DOWN, currentPlayerChunkX, currentPlayerChunkY);
-            std::cout << "Player move DOWN to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkY << std::endl;
+            generateChunk(DOWN, currentPlayerChunkX, currentPlayerChunkZ);
+            std::cout << "Player move DOWN to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkZ << std::endl;
         }
-        if(playerChunkPos.x != currentPlayerChunkX || playerChunkPos.y != currentPlayerChunkY)
+        if(playerChunkPos.x != currentPlayerChunkX || playerChunkPos.y != currentPlayerChunkZ)
         {
             hasPlayerMoved = true;
             std::cout << "" << std::endl;
         }
         playerChunkPos.x = currentPlayerChunkX;
-        playerChunkPos.y = currentPlayerChunkY;
+        playerChunkPos.y = currentPlayerChunkZ;
 
     }
 
@@ -107,6 +108,7 @@ public:
 
         int chunkPosX= (((int)floor(playerPosDirection.x))/CHUNK_WIDTH)*CHUNK_WIDTH;
         int chunkPosZ= (((int)floor(playerPosDirection.z))/CHUNK_WIDTH)*CHUNK_WIDTH;
+
 
         Chunk nwChunk = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
         Chunk neChunk = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);

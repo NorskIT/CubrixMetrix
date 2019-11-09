@@ -12,7 +12,6 @@
 class Cube {
     std::vector<float> vertices, top, bot, left, right, front, back;
 
-
 public:
     Cube(float x, float y, float z, bool visible)
     {
@@ -71,7 +70,6 @@ public:
     {
         vertices.insert(vertices.end(), back.begin(), back.end());
     }
-
     void useRight()
     {
         vertices.insert(vertices.end(), left.begin(), left.end());
@@ -91,15 +89,6 @@ public:
     void useFront()
     {
         vertices.insert(vertices.end(), front.begin(), front.end());
-    }
-    void useAll()
-    {
-        useBack();
-        useLeft();
-        useRight();
-        useTop();
-        useBot();
-        useFront();
     }
     std::vector<float> getVertices()
     {

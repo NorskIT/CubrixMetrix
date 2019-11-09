@@ -12,8 +12,8 @@
 #include "glm/gtc/noise.hpp"
 #include "dep/SimplexNoise.h"
 
-#define CHUNK_WIDTH 100
-#define CHUNK_HEIGHT 5
+#define CHUNK_WIDTH 175
+#define CHUNK_HEIGHT 6
 
 //Reduce values on noice. Higher value, less noise(High value == Flat terrain)
 #define NOISE_HEIGHT 100
@@ -116,13 +116,6 @@ public:
                         cube.useTop();
                     }
 
-                    //Renders bottom of chunk.
-                    if(y == 0)
-                    {
-                        //cube.useBot();
-                    }
-
-
 
                     if(y > 0)
                     {
@@ -150,7 +143,7 @@ public:
                     }
 
                     /*
-                     * We then need to check if block hits anything outside of current chunk.
+                     * We then need to check if current cube hits anything outside of current chunk.
                      */
                     if(z == 0)
                     {

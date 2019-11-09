@@ -30,15 +30,11 @@ const unsigned int SCR_HEIGHT = 720;
 unsigned int VBO[9]; //9 chunks to render
 unsigned int cubeVAO[9], lightVAO;
 
-std::vector<float> vertices1;
-std::vector<float> vertices2;
-
 // Stores all vertices for our world
 ChunkManager chunkManager = ChunkManager();
 
 //DEBUG
 int i = 0;
-double lastTime = glfwGetTime();
 bool CanMoveMouse = true;
 
 // camera
@@ -52,10 +48,6 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 float zoomVariable = 1;
-
-bool startup = true;
-
-int SwitchChunk = 0;
 
 bool debug = false;
 
@@ -201,17 +193,20 @@ int main()
         }else {
             for(unsigned int x : cubeVAO)
             {
-                if(x == 4)
+                if((x+i)%2==0)
                 {
                     renderChunks(containerImg, x);
-                } else
+                } else {
                     renderChunks(grass, x);
+                }
             }
+
         }
         if(chunkManager.hasPlayerMoved)
         {
             RenderWorld();
             chunkManager.hasPlayerMoved = false;
+            ++i;
         }
 
 
