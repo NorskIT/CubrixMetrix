@@ -38,7 +38,7 @@ int i = 0;
 bool CanMoveMouse = true;
 
 // camera
-Camera camera(glm::vec3((0), CHUNK_HEIGHT, (0)));
+Camera camera(glm::vec3((CHUNK_WIDTH/2), CHUNK_HEIGHT, (CHUNK_WIDTH/2)));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;

@@ -72,6 +72,11 @@ public:
          */
         int currentPlayerChunkX= (int)((floor(playerPos.x))/CHUNK_WIDTH)*CHUNK_WIDTH;
         int currentPlayerChunkZ= (int)((floor(playerPos.z)) / CHUNK_WIDTH) * CHUNK_WIDTH;
+        if(playerPos.x < 0) {
+            currentPlayerChunkX -= CHUNK_WIDTH;
+        }if(playerPos.z < 0) {
+            currentPlayerChunkZ -= CHUNK_WIDTH;
+        }
 
 
         if(currentPlayerChunkX < playerChunkPos.x)
@@ -104,6 +109,10 @@ public:
 
     }
 
+    /*
+     * We use this only 1 time. This is for generating all the
+     * terrain around the player, when the player enters the world.
+     */
     void startupGenerateChunk(glm::vec3 playerPosDirection) {
 
         int chunkPosX= (((int)floor(playerPosDirection.x))/CHUNK_WIDTH)*CHUNK_WIDTH;
@@ -167,9 +176,9 @@ public:
 
         if(direction == RIGHT)
         {
-            c=e;
-            n=ne;
-            s=se;
+            c=lastE;
+            n=lastNE;
+            s=lastSE;
             nw = lastN;
             w = lastC;
             sw = lastS;
@@ -185,9 +194,9 @@ public:
         }
         if(direction == UP)
         {
-            c = n;
-            w = nw;
-            e = ne;
+            c = lastN;
+            w = lastNW;
+            e = lastNE;
             sw = lastW;
             s = lastC;
             se = lastE;
@@ -203,9 +212,9 @@ public:
         }
         if(direction == DOWN)
         {
-            c = s;
-            w = sw;
-            e = se;
+            c = lastS;
+            w = lastSW;
+            e = lastSE;
             nw = lastW;
             n = lastC;
             ne = lastE;

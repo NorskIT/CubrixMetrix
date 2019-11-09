@@ -12,12 +12,23 @@
 #include "glm/gtc/noise.hpp"
 #include "dep/SimplexNoise.h"
 
-#define CHUNK_WIDTH 175
-#define CHUNK_HEIGHT 6
+
+/*
+ * MAX WIDTH:
+ *      Width 182
+ *      Height 7
+ * MAX HEIGHT
+ *      Width 7
+ *      Height 2500+ <- It just lags at this altitude.
+
+ */
+#define CHUNK_WIDTH 100
+#define CHUNK_HEIGHT 20
 
 //Reduce values on noice. Higher value, less noise(High value == Flat terrain)
-#define NOISE_HEIGHT 100
-#define NOISE_WIDTH 100
+#define NOISE_HEIGHT 35
+#define NOISE_WIDTH_X 75
+#define NOISE_WIDTH_Y 39
 
 class Chunk {
 
@@ -85,7 +96,9 @@ public:
      */
     float GenerateNoisePoint(float x, float y, float z)
     {
-        float value = SimplexNoise::noise(x/NOISE_WIDTH, y/NOISE_WIDTH, z/NOISE_HEIGHT)*CHUNK_HEIGHT;
+        SimplexNoise noise = SimplexNoise(x/NOISE_WIDTH_X, y/NOISE_WIDTH_Y, z/NOISE_HEIGHT);
+        float value = noise.noise(x/NOISE_WIDTH_X, y/NOISE_WIDTH_Y, z/NOISE_HEIGHT)*(CHUNK_HEIGHT-1)+1;
+
         if(value < 0) {
             value *= -1;
         }
