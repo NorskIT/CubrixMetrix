@@ -21,6 +21,7 @@ void processInput(GLFWwindow *window);
 void VertexAttribArray(std::vector<float> vertices, unsigned int vertexBuffer, unsigned int vertexArray);
 unsigned int loadTexture(const char *path);
 void RenderWorld();
+void renderChunks(unsigned int diff, unsigned int VertexArray);
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -41,7 +42,7 @@ double lastTime = glfwGetTime();
 bool CanMoveMouse = true;
 
 // camera
-Camera camera(glm::vec3((CHUNK_WIDTH), CHUNK_HEIGHT, (CHUNK_WIDTH)));
+Camera camera(glm::vec3((0), CHUNK_HEIGHT, (0)));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -55,6 +56,8 @@ float zoomVariable = 1;
 bool startup = true;
 
 int SwitchChunk = 0;
+
+bool debug = false;
 
 int main()
 {
@@ -101,8 +104,7 @@ int main()
     glGenVertexArrays(9, cubeVAO);
     glGenBuffers(9, VBO);
 
-    chunkManager.generateChunk(camera.Position);
-    chunkManager.generateChunk(camera.Position);
+    chunkManager.startupGenerateChunk(camera.Position);
     RenderWorld();
 
     glGenVertexArrays(1, &lightVAO);
@@ -114,9 +116,18 @@ int main()
 
     // load textures (we now use a utility function to keep the code more organized)
     // -----------------------------------------------------------------------------
-    unsigned int diffuseMap = loadTexture("../grassWide.jpg");
-    unsigned int containerMap = loadTexture("../container.jpg");
-    unsigned int specularMap = loadTexture("../grassWide.jpg");
+    unsigned int sImg = loadTexture("../images/s.jpg");
+    unsigned int eImg = loadTexture("../images/e.jpg");
+    unsigned int wImg = loadTexture("../images/w.jpg");
+    unsigned int nImg = loadTexture("../images/n.jpg");
+    unsigned int cImg = loadTexture("../images/c.jpg");
+    unsigned int neImg = loadTexture("../images/ne.jpg");
+    unsigned int nwImg = loadTexture("../images/nw.jpg");
+    unsigned int swImg = loadTexture("../images/sw.jpg");
+    unsigned int seImg = loadTexture("../images/se.jpg");
+
+    unsigned int grass = loadTexture("../grassWide.jpg");
+    unsigned int containerImg = loadTexture("../container.jpg");
 
     // shader configuration
     // --------------------
@@ -177,26 +188,31 @@ int main()
         float angle = 0.0f;
         model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         lightingShader.setMat4("model", model);
-
-        // bind diffuse map
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuseMap);
-
-        // bind specular map
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specularMap);
-
-        glBindVertexArray(cubeVAO[0]);
-
-
-
-        glDrawArrays(GL_TRIANGLES, 0, chunkManager.world1.size());
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, containerMap);
-        glBindVertexArray(cubeVAO[1]);
-        glDrawArrays(GL_TRIANGLES, 0, chunkManager.world2.size());
-
+        if(debug) {
+            renderChunks(nwImg, cubeVAO[0]);
+            renderChunks(nImg, cubeVAO[1]);
+            renderChunks(neImg, cubeVAO[2]);
+            renderChunks(wImg, cubeVAO[3]);
+            renderChunks(cImg, cubeVAO[4]);
+            renderChunks(eImg, cubeVAO[5]);
+            renderChunks(swImg, cubeVAO[6]);
+            renderChunks(sImg, cubeVAO[7]);
+            renderChunks(seImg, cubeVAO[8]);
+        }else {
+            for(unsigned int x : cubeVAO)
+            {
+                if(x == 4)
+                {
+                    renderChunks(containerImg, x);
+                } else
+                    renderChunks(grass, x);
+            }
+        }
+        if(chunkManager.hasPlayerMoved)
+        {
+            RenderWorld();
+            chunkManager.hasPlayerMoved = false;
+        }
 
 
         glfwSwapBuffers(window);
@@ -209,6 +225,19 @@ int main()
 
     glfwTerminate();
     return 0;
+}
+
+void renderChunks(unsigned int diff, unsigned int VertexArray)
+{
+    // bind diffuse map
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diff);
+
+    // bind specular map
+    /*glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, spec);*/
+    glBindVertexArray(VertexArray);
+    glDrawArrays(GL_TRIANGLES, 0, chunkManager.c.size());
 }
 
 void processInput(GLFWwindow *window)
@@ -227,7 +256,7 @@ void processInput(GLFWwindow *window)
 
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
     {
-        chunkManager.generateChunk(camera.Position);
+        //chunkManager.generateChunk(camera.Position);
         RenderWorld();
     }
 
@@ -293,12 +322,15 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void RenderWorld()
 {
-    vertices1 = chunkManager.world1;
-    vertices2 = chunkManager.world2;
-
-
-    VertexAttribArray(chunkManager.world1, VBO[0], cubeVAO[0]);
-    VertexAttribArray(chunkManager.world2, VBO[1], cubeVAO[1]);
+    VertexAttribArray(chunkManager.nw, VBO[0], cubeVAO[0]);
+    VertexAttribArray(chunkManager.n, VBO[1], cubeVAO[1]);
+    VertexAttribArray(chunkManager.ne, VBO[2], cubeVAO[2]);
+    VertexAttribArray(chunkManager.w, VBO[3], cubeVAO[3]);
+    VertexAttribArray(chunkManager.c, VBO[4], cubeVAO[4]);
+    VertexAttribArray(chunkManager.e, VBO[5], cubeVAO[5]);
+    VertexAttribArray(chunkManager.sw, VBO[6], cubeVAO[6]);
+    VertexAttribArray(chunkManager.s, VBO[7], cubeVAO[7]);
+    VertexAttribArray(chunkManager.se, VBO[8], cubeVAO[8]);
 }
 
 

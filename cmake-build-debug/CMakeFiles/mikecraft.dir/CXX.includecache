@@ -64,6 +64,10 @@ glm/gtc/noise.hpp
 dep/SimplexNoise.h
 /home/mike/CLionProjects/mikecraft/dep/SimplexNoise.h
 
+/home/mike/CLionProjects/mikecraft/ChunkManager.cpp
+ChunkManager.h
+/home/mike/CLionProjects/mikecraft/ChunkManager.h
+
 /home/mike/CLionProjects/mikecraft/ChunkManager.h
 vector
 -

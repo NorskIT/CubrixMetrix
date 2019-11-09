@@ -12,8 +12,8 @@
 #include "glm/gtc/noise.hpp"
 #include "dep/SimplexNoise.h"
 
-#define CHUNK_WIDTH 16
-#define CHUNK_HEIGHT 16
+#define CHUNK_WIDTH 100
+#define CHUNK_HEIGHT 5
 
 //Reduce values on noice. Higher value, less noise(High value == Flat terrain)
 #define NOISE_HEIGHT 100

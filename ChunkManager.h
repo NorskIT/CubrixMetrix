@@ -15,6 +15,8 @@
 #include "Chunk.h"
 
 
+
+
 class ChunkManager {
 
     //Think of a chunk as 4 blocks. These are the names representing these blocks.
@@ -48,9 +50,9 @@ public:
 
     glm::vec2 playerChunkPos; //Which chunk player is in. Example, if he's in the 3rd created chunk, he would be in 0,3.
 
+    bool hasPlayerMoved = false;
+
     long seed;
-    long chunkPosX = 0;
-    long chunkPosZ = 0;
 
     int i = 0;
 
@@ -68,32 +70,32 @@ public:
          * center we are, then we multiply by 16, so that we get the exact X and Y coord
          * of 0,0 of current chunk
          */
-        int currentPlayerChunkX= (((int)floor(playerPos.x))/16)*16;
-        int currentPlayerChunkY= (((int)floor(playerPos.z))/16)*16;
+        int currentPlayerChunkX= (int)((floor(playerPos.x))/CHUNK_WIDTH)*CHUNK_WIDTH;
+        int currentPlayerChunkY= (int)((floor(playerPos.z))/CHUNK_WIDTH)*CHUNK_WIDTH;
 
         if(currentPlayerChunkX < playerChunkPos.x)
         {
-            generateChunk(playerPos, RIGHT);
-            std::cout << "Player move RIGHT to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkY << std::endl;
-
+            generateChunk(LEFT, currentPlayerChunkX, currentPlayerChunkY);
+            std::cout << "Player move LEFT to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkY << std::endl;
         }
         if(currentPlayerChunkX > playerChunkPos.x)
         {
-            generateChunk(playerPos, LEFT);
-            std::cout << "Player move LEFT to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkY << std::endl;
+            generateChunk(RIGHT, currentPlayerChunkX, currentPlayerChunkY);
+            std::cout << "Player move RIGHT to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkY << std::endl;
         }
         if(currentPlayerChunkY > playerChunkPos.y)
         {
-            generateChunk(playerPos, UP);
+            generateChunk(UP, currentPlayerChunkX, currentPlayerChunkY);
             std::cout << "Player move UP to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkY << std::endl;
         }
         if(currentPlayerChunkY < playerChunkPos.y)
         {
-            generateChunk(playerPos, DOWN);
+            generateChunk(DOWN, currentPlayerChunkX, currentPlayerChunkY);
             std::cout << "Player move DOWN to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkY << std::endl;
         }
         if(playerChunkPos.x != currentPlayerChunkX || playerChunkPos.y != currentPlayerChunkY)
         {
+            hasPlayerMoved = true;
             std::cout << "" << std::endl;
         }
         playerChunkPos.x = currentPlayerChunkX;
@@ -101,14 +103,37 @@ public:
 
     }
 
-    void generateChunk(glm::vec3 playerPos, GenerateDirection direction) {
+    void startupGenerateChunk(glm::vec3 playerPosDirection) {
 
+        int chunkPosX= (((int)floor(playerPosDirection.x))/CHUNK_WIDTH)*CHUNK_WIDTH;
+        int chunkPosZ= (((int)floor(playerPosDirection.z))/CHUNK_WIDTH)*CHUNK_WIDTH;
+
+        Chunk nwChunk = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
+        Chunk neChunk = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
+        Chunk seChunk = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
+        Chunk swChunk = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
+
+        Chunk nChunk = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ+CHUNK_WIDTH), seed);
+        Chunk sChunk = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ-CHUNK_WIDTH), seed);
+        Chunk eChunk = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ), seed);
+        Chunk wChunk = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ), seed);
+
+        Chunk cChunk = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ), seed);
+
+        se.insert(se.end(), seChunk.vertices.begin(), seChunk.vertices.end());
+        sw.insert(sw.end(), swChunk.vertices.begin(), swChunk.vertices.end());
+        nw.insert(nw.end(), nwChunk.vertices.begin(), nwChunk.vertices.end());
+        ne.insert(ne.end(), neChunk.vertices.begin(), neChunk.vertices.end());
+
+        w.insert(w.end(), wChunk.vertices.begin(), wChunk.vertices.end());
+        e.insert(e.end(), eChunk.vertices.begin(), eChunk.vertices.end());
+        s.insert(s.end(), sChunk.vertices.begin(), sChunk.vertices.end());
+        n.insert(n.end(), nChunk.vertices.begin(), nChunk.vertices.end());
+
+        c.insert(c.end(), cChunk.vertices.begin(), cChunk.vertices.end());
     }
-    void generateChunk(glm::vec3 playerPos)
+    void generateChunk(GenerateDirection direction, int chunkPosX, int chunkPosZ)
     {
-        GenerateDirection direction = LEFT;
-
-        Chunk chunk = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ), seed);
         std::vector<float> lastNW = nw;
         std::vector<float> lastNE = ne;
         std::vector<float> lastSW = sw;
@@ -120,49 +145,83 @@ public:
         std::vector<float> lastC = c;
         if(direction == LEFT)
         {
-            c=w;
-            n=nw;
-            s=sw;
-            ne = n;
-            e = c;
-            se = s;
+            c=lastW;
+            n=lastNW;
+            s=lastSW;
+            ne = lastN;
+            e = lastC;
+            se = lastS;
 
             Chunk swChunk = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
             Chunk wChunk = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ), seed);
             Chunk nwChunk = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
             sw.clear();
+            w.clear();
+            nw.clear();
             sw.insert(sw.end(), swChunk.vertices.begin(), swChunk.vertices.end());
+            w.insert(w.end(), wChunk.vertices.begin(), wChunk.vertices.end());
+            nw.insert(nw.end(), nwChunk.vertices.begin(), nwChunk.vertices.end());
         }
-        /*
+
         if(direction == RIGHT)
         {
-            nw = n;
-            w = c;
-            sw = s;
-            Chunk se = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
-            Chunk e = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ), seed);
-            Chunk ne = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
+            c=e;
+            n=ne;
+            s=se;
+            nw = lastN;
+            w = lastC;
+            sw = lastS;
+            Chunk seChunk = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
+            Chunk eChunk = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ), seed);
+            Chunk neChunk = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
+            se.clear();
+            e.clear();
+            ne.clear();
+            se.insert(se.end(), seChunk.vertices.begin(), seChunk.vertices.end());
+            e.insert(e.end(), eChunk.vertices.begin(), eChunk.vertices.end());
+            ne.insert(ne.end(), neChunk.vertices.begin(), neChunk.vertices.end());
         }
         if(direction == UP)
         {
-            sw = w;
-            s = c;
-            se = e;
-            Chunk nw = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
-            Chunk n = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ+CHUNK_WIDTH), seed);
-            Chunk ne = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
+            c = n;
+            w = nw;
+            e = ne;
+            sw = lastW;
+            s = lastC;
+            se = lastE;
+            Chunk nwChunk = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
+            Chunk nChunk = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ+CHUNK_WIDTH), seed);
+            Chunk neChunk = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
+            nw.clear();
+            n.clear();
+            ne.clear();
+            nw.insert(nw.end(), nwChunk.vertices.begin(), nwChunk.vertices.end());
+            n.insert(n.end(), nChunk.vertices.begin(), nChunk.vertices.end());
+            ne.insert(ne.end(), neChunk.vertices.begin(), neChunk.vertices.end());
         }
         if(direction == DOWN)
         {
-            nw = w;
-            n = c;
-            ne = e;
-            Chunk sw = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
-            Chunk s = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ-CHUNK_WIDTH), seed);
-            Chunk se = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
-        }*/
+            c = s;
+            w = sw;
+            e = se;
+            nw = lastW;
+            n = lastC;
+            ne = lastE;
+            Chunk swChunk = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
+            Chunk sChunk = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ-CHUNK_WIDTH), seed);
+            Chunk seChunk = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
+            sw.clear();
+            s.clear();
+            se.clear();
+            sw.insert(sw.end(), swChunk.vertices.begin(), swChunk.vertices.end());
+            s.insert(s.end(), sChunk.vertices.begin(), sChunk.vertices.end());
+            se.insert(se.end(), seChunk.vertices.begin(), seChunk.vertices.end());
+        }
 
-
+        /*
+         *
+         *
+        Chunk chunk = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ), seed);
         //We add two list, for each vertex array, so that we easily can add different texture on every other chunk.
         if(i%2 == 0)
         {
@@ -178,7 +237,7 @@ public:
             chunkPosZ = 0;
         }
         i++;
-
+        */
     }
 
 
