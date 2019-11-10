@@ -49,6 +49,7 @@ public:
 
     std::vector<Chunk> cachedChunks;
     Chunk centerChunks[9];
+    Chunk water;
 
     std::vector<float> world1; //Cache
 

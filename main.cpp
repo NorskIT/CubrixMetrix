@@ -51,7 +51,7 @@ ChunkManager chunkManager;
 
 float zoomVariable = 1;
 
-bool debug = false;
+bool debug = true;
 
 int main()
 {
@@ -178,15 +178,6 @@ int main()
 
 
         if(debug) {
-            renderChunks(nwImg, cubeVAO[0]);
-            renderChunks(nImg, cubeVAO[1]);
-            renderChunks(neImg, cubeVAO[2]);
-            renderChunks(eImg, cubeVAO[3]);
-            renderChunks(cImg, cubeVAO[4]);
-            renderChunks(wImg, cubeVAO[5]);
-            renderChunks(swImg, cubeVAO[6]);
-            renderChunks(sImg, cubeVAO[7]);
-            renderChunks(seImg, cubeVAO[8]);
             renderChunks(grass, cubeVAO[9]);;
         }else {
             for(unsigned int x : cubeVAO)
