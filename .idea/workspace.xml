@@ -21,7 +21,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Chunk.h" beforeDir="false" afterPath="$PROJECT_DIR$/Chunk.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChunkManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/ChunkManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/Chunk.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/Chunk.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/ChunkManager.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/ChunkManager.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/main.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/mikecraft" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/mikecraft" afterDir="false" />
@@ -147,7 +147,7 @@
       <workItem from="1573116686729" duration="18604000" />
       <workItem from="1573203370998" duration="16410000" />
       <workItem from="1573304675556" duration="34706000" />
-      <workItem from="1573380283841" duration="11238000" />
+      <workItem from="1573380283841" duration="23104000" />
     </task>
     <servers />
   </component>
@@ -172,13 +172,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/main.cpp</url>
-          <line>192</line>
+          <line>194</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/ChunkManager.h</url>
-          <line>308</line>
-          <option name="timeStamp" value="19" />
+          <line>249</line>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

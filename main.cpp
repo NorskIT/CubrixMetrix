@@ -30,8 +30,7 @@ const unsigned int SCR_HEIGHT = 720;
 unsigned int VBO[10]; //10 chunks to render
 unsigned int cubeVAO[10], lightVAO;
 
-// Stores all vertices for our world
-ChunkManager chunkManager = ChunkManager();
+
 
 //DEBUG
 int i = 0;
@@ -47,9 +46,12 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+// Stores all vertices for our world
+ChunkManager chunkManager;
+
 float zoomVariable = 1;
 
-bool debug = true;
+bool debug = false;
 
 int main()
 {
@@ -96,7 +98,7 @@ int main()
     glGenVertexArrays(10, cubeVAO);
     glGenBuffers(10, VBO);
 
-    chunkManager.startupGenerateChunk(camera.Position);
+    chunkManager = ChunkManager(camera.Position);
     RenderWorld();
 
     /*glGenVertexArrays(1, &lightVAO);
@@ -189,12 +191,7 @@ int main()
         }else {
             for(unsigned int x : cubeVAO)
             {
-                if((x+i)%2==0)
-                {
-                    renderChunks(containerImg, x);
-                } else {
-                    renderChunks(grass, x);
-                }
+                renderChunks(grass, x);
             }
 
         }
@@ -319,15 +316,15 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void RenderWorld()
 {
-    VertexAttribArray(chunkManager.nw, VBO[0], cubeVAO[0]);
-    VertexAttribArray(chunkManager.n, VBO[1], cubeVAO[1]);
-    VertexAttribArray(chunkManager.ne, VBO[2], cubeVAO[2]);
-    VertexAttribArray(chunkManager.w, VBO[3], cubeVAO[3]);
-    VertexAttribArray(chunkManager.c, VBO[4], cubeVAO[4]);
-    VertexAttribArray(chunkManager.e, VBO[5], cubeVAO[5]);
-    VertexAttribArray(chunkManager.sw, VBO[6], cubeVAO[6]);
-    VertexAttribArray(chunkManager.s, VBO[7], cubeVAO[7]);
-    VertexAttribArray(chunkManager.se, VBO[8], cubeVAO[8]);
+    VertexAttribArray(chunkManager.centerChunks[0].vertices, VBO[0], cubeVAO[0]);
+    VertexAttribArray(chunkManager.centerChunks[1].vertices, VBO[1], cubeVAO[1]);
+    VertexAttribArray(chunkManager.centerChunks[2].vertices, VBO[2], cubeVAO[2]);
+    VertexAttribArray(chunkManager.centerChunks[3].vertices, VBO[3], cubeVAO[3]);
+    VertexAttribArray(chunkManager.centerChunks[4].vertices, VBO[4], cubeVAO[4]);
+    VertexAttribArray(chunkManager.centerChunks[5].vertices, VBO[5], cubeVAO[5]);
+    VertexAttribArray(chunkManager.centerChunks[6].vertices, VBO[6], cubeVAO[6]);
+    VertexAttribArray(chunkManager.centerChunks[7].vertices, VBO[7], cubeVAO[7]);
+    VertexAttribArray(chunkManager.centerChunks[8].vertices, VBO[8], cubeVAO[8]);
     VertexAttribArray(chunkManager.world1, VBO[9], cubeVAO[9]);
 }
 

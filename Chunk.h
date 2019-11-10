@@ -47,6 +47,7 @@ public:
      *
      * */
 
+    Chunk() = default;
     Chunk(glm::vec3 chunkPos, long seed)
     {
         pos = chunkPos;
@@ -57,7 +58,7 @@ public:
             for (float y = 0; y < CHUNK_HEIGHT; ++y) {
                 for (float z = 0; z < CHUNK_WIDTH; ++z) {
 
-                    //Add the difference for each chunk, pluss noise values.
+                    //Add the difference for each chunk, plus noise values.
                     float xPos = (x+pos.x);
                     float yPos = (y+pos.y);
                     float zPos = (z+pos.z);
@@ -204,6 +205,15 @@ public:
                 }
             }
         }
+    }
+
+    bool equals(Chunk chunk)
+    {
+        return pos.z == chunk.pos.z && pos.x == chunk.pos.x;
+    }
+    bool equals(int x, int z)
+    {
+        return pos.z == z && pos.x == x;
     }
 
 };
