@@ -4,10 +4,10 @@
     <generated>
       <config projectName="mikecraft" targetName="glfw" />
       <config projectName="mikecraft" targetName="mikecraft" />
-      <config projectName="mikecraft" targetName="glewinfo" />
+      <config projectName="mikecraft" targetName="glew" />
       <config projectName="mikecraft" targetName="uninstall" />
       <config projectName="mikecraft" targetName="glew_s" />
-      <config projectName="mikecraft" targetName="glew" />
+      <config projectName="mikecraft" targetName="glewinfo" />
       <config projectName="mikecraft" targetName="visualinfo" />
     </generated>
   </component>
@@ -146,7 +146,8 @@
       <workItem from="1573073082330" duration="3977000" />
       <workItem from="1573116686729" duration="18604000" />
       <workItem from="1573203370998" duration="16410000" />
-      <workItem from="1573304675556" duration="30462000" />
+      <workItem from="1573304675556" duration="34706000" />
+      <workItem from="1573380283841" duration="11238000" />
     </task>
     <servers />
   </component>
@@ -158,10 +159,28 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/main.cpp</url>
+          <line>192</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/ChunkManager.h</url>
+          <line>308</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

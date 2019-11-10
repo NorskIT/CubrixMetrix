@@ -22,8 +22,8 @@
  *      Height 2500+ <- It just lags at this altitude.
 
  */
-#define CHUNK_WIDTH 100
-#define CHUNK_HEIGHT 20
+#define CHUNK_WIDTH 38
+#define CHUNK_HEIGHT 7
 
 //Reduce values on noice. Higher value, less noise(High value == Flat terrain)
 #define NOISE_HEIGHT 35
