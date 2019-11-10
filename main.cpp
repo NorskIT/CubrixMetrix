@@ -27,11 +27,10 @@ void renderChunks(unsigned int diff, unsigned int VertexArray);
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 
-unsigned int VBO[9]; //9 chunks to render
-unsigned int cubeVAO[9], lightVAO;
+unsigned int VBO[10]; //10 chunks to render
+unsigned int cubeVAO[10], lightVAO;
 
-// Stores all vertices for our world
-ChunkManager chunkManager = ChunkManager();
+
 
 //DEBUG
 int i = 0;
@@ -47,9 +46,12 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+// Stores all vertices for our world
+ChunkManager chunkManager;
+
 float zoomVariable = 1;
 
-bool debug = false;
+bool debug = true;
 
 int main()
 {
@@ -93,18 +95,19 @@ int main()
 
 
 
-    glGenVertexArrays(9, cubeVAO);
-    glGenBuffers(9, VBO);
+    glGenVertexArrays(10, cubeVAO);
+    glGenBuffers(10, VBO);
 
-    chunkManager.startupGenerateChunk(camera.Position);
+    chunkManager = ChunkManager(camera.Position);
     RenderWorld();
 
-    glGenVertexArrays(1, &lightVAO);
+    /*glGenVertexArrays(1, &lightVAO);
     glBindVertexArray(lightVAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    */
 
     // load textures (we now use a utility function to keep the code more organized)
     // -----------------------------------------------------------------------------
@@ -174,31 +177,12 @@ int main()
         lightingShader.setMat4("model", model);
 
 
-        // calculate the model matrix for each object and pass it to shader before drawing
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(1));
-        float angle = 0.0f;
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-        lightingShader.setMat4("model", model);
         if(debug) {
-            renderChunks(nwImg, cubeVAO[0]);
-            renderChunks(nImg, cubeVAO[1]);
-            renderChunks(neImg, cubeVAO[2]);
-            renderChunks(wImg, cubeVAO[3]);
-            renderChunks(cImg, cubeVAO[4]);
-            renderChunks(eImg, cubeVAO[5]);
-            renderChunks(swImg, cubeVAO[6]);
-            renderChunks(sImg, cubeVAO[7]);
-            renderChunks(seImg, cubeVAO[8]);
+            renderChunks(grass, cubeVAO[9]);;
         }else {
             for(unsigned int x : cubeVAO)
             {
-                if((x+i)%2==0)
-                {
-                    renderChunks(containerImg, x);
-                } else {
-                    renderChunks(grass, x);
-                }
+                renderChunks(grass, x);
             }
 
         }
@@ -214,9 +198,9 @@ int main()
         glfwPollEvents();
     }
 
-    glDeleteVertexArrays(9, cubeVAO);
+    glDeleteVertexArrays(10, cubeVAO);
     glDeleteVertexArrays(1, &lightVAO);
-    glDeleteBuffers(9, VBO);
+    glDeleteBuffers(10, VBO);
 
     glfwTerminate();
     return 0;
@@ -231,8 +215,14 @@ void renderChunks(unsigned int diff, unsigned int VertexArray)
     // bind specular map
     /*glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, spec);*/
+
     glBindVertexArray(VertexArray);
-    glDrawArrays(GL_TRIANGLES, 0, chunkManager.c.size());
+    glDrawArrays(GL_TRIANGLES, 0, chunkManager.world1.size());
+    //TODO: Spørsmål: 9 av 10 lister har like størrelse,
+    //      Den siste er mye større. Hvorfor er jeg nødt til å bruke den største størrlsen?
+    //      Hvorfor kan jeg ikke ikke si at "hvis VertexArray er 10, så skal vi bruker world1.size", ellers "bruk c.size()"
+
+
 }
 
 void processInput(GLFWwindow *window)
@@ -317,15 +307,16 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void RenderWorld()
 {
-    VertexAttribArray(chunkManager.nw, VBO[0], cubeVAO[0]);
-    VertexAttribArray(chunkManager.n, VBO[1], cubeVAO[1]);
-    VertexAttribArray(chunkManager.ne, VBO[2], cubeVAO[2]);
-    VertexAttribArray(chunkManager.w, VBO[3], cubeVAO[3]);
-    VertexAttribArray(chunkManager.c, VBO[4], cubeVAO[4]);
-    VertexAttribArray(chunkManager.e, VBO[5], cubeVAO[5]);
-    VertexAttribArray(chunkManager.sw, VBO[6], cubeVAO[6]);
-    VertexAttribArray(chunkManager.s, VBO[7], cubeVAO[7]);
-    VertexAttribArray(chunkManager.se, VBO[8], cubeVAO[8]);
+    VertexAttribArray(chunkManager.centerChunks[0].vertices, VBO[0], cubeVAO[0]);
+    VertexAttribArray(chunkManager.centerChunks[1].vertices, VBO[1], cubeVAO[1]);
+    VertexAttribArray(chunkManager.centerChunks[2].vertices, VBO[2], cubeVAO[2]);
+    VertexAttribArray(chunkManager.centerChunks[3].vertices, VBO[3], cubeVAO[3]);
+    VertexAttribArray(chunkManager.centerChunks[4].vertices, VBO[4], cubeVAO[4]);
+    VertexAttribArray(chunkManager.centerChunks[5].vertices, VBO[5], cubeVAO[5]);
+    VertexAttribArray(chunkManager.centerChunks[6].vertices, VBO[6], cubeVAO[6]);
+    VertexAttribArray(chunkManager.centerChunks[7].vertices, VBO[7], cubeVAO[7]);
+    VertexAttribArray(chunkManager.centerChunks[8].vertices, VBO[8], cubeVAO[8]);
+    VertexAttribArray(chunkManager.world1, VBO[9], cubeVAO[9]);
 }
 
 

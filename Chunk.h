@@ -22,8 +22,8 @@
  *      Height 2500+ <- It just lags at this altitude.
 
  */
-#define CHUNK_WIDTH 100
-#define CHUNK_HEIGHT 20
+#define CHUNK_WIDTH 38
+#define CHUNK_HEIGHT 7
 
 //Reduce values on noice. Higher value, less noise(High value == Flat terrain)
 #define NOISE_HEIGHT 35
@@ -47,6 +47,49 @@ public:
      *
      * */
 
+    Chunk() = default;
+    Chunk(glm::vec3 chunkPos, long seed, int waterHeight)
+    {
+        pos = chunkPos;
+        currentSeed = seed;
+
+        //3 for loops, representing X,Y,Z coords.
+        for(float x = 0; x < CHUNK_WIDTH; ++x) {
+            for (float y = waterHeight; y < waterHeight; ++y) {
+                for (float z = 0; z < CHUNK_WIDTH; ++z) {
+
+                    //Add the difference for each chunk, plus noise values.
+                    float xPos = (x+pos.x);
+                    float yPos = (y+pos.y);
+                    float zPos = (z+pos.z);
+
+
+                    float value = GenerateNoisePoint(xPos, yPos, zPos);
+                    value += 1;
+
+                    /*
+                     *
+                     * Example:
+                     * If Y, which is out height, is larger than the value SimplexNoise has returned,
+                     * based on X, Y and Z, then we will NOT draw that cube.
+                     *
+                     * This way, we can always calulcate our way back to every block, which comes
+                     * in handy later when we need to know which side of the cube to draw.
+                     */
+
+
+                    if(value > y)
+                    {
+                        map[(int)x][(int)y][(int)z] = 1;
+                    } else {
+                        map[(int)x][(int)y][(int)z] = 0;
+                    }
+                }
+            }
+        }
+        //After map is created, we need to determine which side/vertices to draw
+        bindChunkIntoVertices();
+    }
     Chunk(glm::vec3 chunkPos, long seed)
     {
         pos = chunkPos;
@@ -57,7 +100,7 @@ public:
             for (float y = 0; y < CHUNK_HEIGHT; ++y) {
                 for (float z = 0; z < CHUNK_WIDTH; ++z) {
 
-                    //Add the difference for each chunk, pluss noise values.
+                    //Add the difference for each chunk, plus noise values.
                     float xPos = (x+pos.x);
                     float yPos = (y+pos.y);
                     float zPos = (z+pos.z);
@@ -204,6 +247,15 @@ public:
                 }
             }
         }
+    }
+
+    bool equals(Chunk chunk)
+    {
+        return pos.z == chunk.pos.z && pos.x == chunk.pos.x;
+    }
+    bool equals(int x, int z)
+    {
+        return pos.z == z && pos.x == x;
     }
 
 };
