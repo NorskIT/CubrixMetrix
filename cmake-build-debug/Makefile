@@ -39,10 +39,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /snap/clion/92/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /snap/clion/98/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /snap/clion/92/bin/cmake/linux/bin/cmake -E remove -f
+RM = /snap/clion/98/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -59,19 +59,19 @@ CMAKE_BINARY_DIR = /home/mike/CLionProjects/mikecraft/cmake-build-debug
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/snap/clion/92/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+	/snap/clion/98/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip
 
 # Special rule for the target install/strip
 install/strip/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/snap/clion/92/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+	/snap/clion/98/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip/fast
 
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/snap/clion/92/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/snap/clion/98/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -82,19 +82,19 @@ edit_cache/fast: edit_cache
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/snap/clion/92/bin/cmake/linux/bin/cmake -P cmake_install.cmake
+	/snap/clion/98/bin/cmake/linux/bin/cmake -P cmake_install.cmake
 .PHONY : install
 
 # Special rule for the target install
 install/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/snap/clion/92/bin/cmake/linux/bin/cmake -P cmake_install.cmake
+	/snap/clion/98/bin/cmake/linux/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/snap/clion/92/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/snap/clion/98/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -115,13 +115,13 @@ list_install_components/fast: list_install_components
 # Special rule for the target install/local
 install/local: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/snap/clion/92/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+	/snap/clion/98/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local
 
 # Special rule for the target install/local
 install/local/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/snap/clion/92/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+	/snap/clion/98/bin/cmake/linux/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
 
 # The main all target
@@ -328,6 +328,33 @@ Cube.cpp.s:
 	$(MAKE) -f CMakeFiles/mikecraft.dir/build.make CMakeFiles/mikecraft.dir/Cube.cpp.s
 .PHONY : Cube.cpp.s
 
+FlyCamera.o: FlyCamera.cpp.o
+
+.PHONY : FlyCamera.o
+
+# target to build an object file
+FlyCamera.cpp.o:
+	$(MAKE) -f CMakeFiles/mikecraft.dir/build.make CMakeFiles/mikecraft.dir/FlyCamera.cpp.o
+.PHONY : FlyCamera.cpp.o
+
+FlyCamera.i: FlyCamera.cpp.i
+
+.PHONY : FlyCamera.i
+
+# target to preprocess a source file
+FlyCamera.cpp.i:
+	$(MAKE) -f CMakeFiles/mikecraft.dir/build.make CMakeFiles/mikecraft.dir/FlyCamera.cpp.i
+.PHONY : FlyCamera.cpp.i
+
+FlyCamera.s: FlyCamera.cpp.s
+
+.PHONY : FlyCamera.s
+
+# target to generate assembly for a file
+FlyCamera.cpp.s:
+	$(MAKE) -f CMakeFiles/mikecraft.dir/build.make CMakeFiles/mikecraft.dir/FlyCamera.cpp.s
+.PHONY : FlyCamera.cpp.s
+
 Shader.o: Shader.cpp.o
 
 .PHONY : Shader.o
@@ -464,6 +491,9 @@ help:
 	@echo "... Cube.o"
 	@echo "... Cube.i"
 	@echo "... Cube.s"
+	@echo "... FlyCamera.o"
+	@echo "... FlyCamera.i"
+	@echo "... FlyCamera.s"
 	@echo "... Shader.o"
 	@echo "... Shader.i"
 	@echo "... Shader.s"

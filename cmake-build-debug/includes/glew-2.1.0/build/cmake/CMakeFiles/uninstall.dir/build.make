@@ -34,10 +34,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /snap/clion/92/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /snap/clion/98/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /snap/clion/92/bin/cmake/linux/bin/cmake -E remove -f
+RM = /snap/clion/98/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/mike/CLionProjects/mikecraft/cmake-build-debug
 include includes/glew-2.1.0/build/cmake/CMakeFiles/uninstall.dir/progress.make
 
 includes/glew-2.1.0/build/cmake/CMakeFiles/uninstall:
-	cd /home/mike/CLionProjects/mikecraft/cmake-build-debug/includes/glew-2.1.0/build/cmake && /snap/clion/92/bin/cmake/linux/bin/cmake -P /home/mike/CLionProjects/mikecraft/cmake-build-debug/includes/glew-2.1.0/build/cmake/cmake_uninstall.cmake
+	cd /home/mike/CLionProjects/mikecraft/cmake-build-debug/includes/glew-2.1.0/build/cmake && /snap/clion/98/bin/cmake/linux/bin/cmake -P /home/mike/CLionProjects/mikecraft/cmake-build-debug/includes/glew-2.1.0/build/cmake/cmake_uninstall.cmake
 
 uninstall: includes/glew-2.1.0/build/cmake/CMakeFiles/uninstall
 uninstall: includes/glew-2.1.0/build/cmake/CMakeFiles/uninstall.dir/build.make

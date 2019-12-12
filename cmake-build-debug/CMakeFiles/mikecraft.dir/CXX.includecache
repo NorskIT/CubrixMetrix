@@ -86,6 +86,16 @@ glm/vec3.hpp
 vector
 -
 
+/home/mike/CLionProjects/mikecraft/FlyCamera.h
+glad/glad.h
+-
+glm/glm.hpp
+-
+vector
+-
+glm/gtc/matrix_transform.hpp
+-
+
 /home/mike/CLionProjects/mikecraft/Shader.h
 glad/glad.h
 -
@@ -95,9 +105,9 @@ string
 -
 fstream
 -
-sstream
--
 iostream
+-
+sstream
 -
 
 /home/mike/CLionProjects/mikecraft/camera.h
@@ -105,9 +115,9 @@ glad/glad.h
 -
 glm/glm.hpp
 -
-glm/gtc/matrix_transform.hpp
--
 vector
+-
+glm/gtc/matrix_transform.hpp
 -
 
 /home/mike/CLionProjects/mikecraft/dep/SimplexNoise.h
@@ -129,6 +139,8 @@ Cube.h
 /home/mike/CLionProjects/mikecraft/Cube.h
 ChunkManager.h
 /home/mike/CLionProjects/mikecraft/ChunkManager.h
+FlyCamera.h
+/home/mike/CLionProjects/mikecraft/FlyCamera.h
 glm/glm.hpp
 -
 glm/gtc/matrix_transform.hpp

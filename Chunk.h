@@ -22,13 +22,15 @@
  *      Height 2500+ <- It just lags at this altitude.
 
  */
-#define CHUNK_WIDTH 38
-#define CHUNK_HEIGHT 7
+#define CHUNK_WIDTH 32
+#define CHUNK_HEIGHT 15
 
 //Reduce values on noice. Higher value, less noise(High value == Flat terrain)
-#define NOISE_HEIGHT 35
-#define NOISE_WIDTH_X 75
-#define NOISE_WIDTH_Y 39
+#define NOISE_HEIGHT 15
+#define NOISE_WIDTH_X 40
+#define NOISE_WIDTH_Y 40
+
+#define WATER_HEIGHT 5
 
 class Chunk {
 
@@ -36,6 +38,8 @@ public:
 
     float map[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_WIDTH];
     std::vector<float> vertices;
+    std::vector<float> water;
+    bool isWater = false;
     glm::vec3 pos;
     long currentSeed;
 
@@ -48,14 +52,16 @@ public:
      * */
 
     Chunk() = default;
-    Chunk(glm::vec3 chunkPos, long seed, int waterHeight)
+
+    //Water Chunk
+    Chunk(Chunk chunk, int waterheight)
     {
-        pos = chunkPos;
-        currentSeed = seed;
+        isWater = true;
+        pos = chunk.pos;
 
         //3 for loops, representing X,Y,Z coords.
         for(float x = 0; x < CHUNK_WIDTH; ++x) {
-            for (float y = waterHeight; y < waterHeight; ++y) {
+            for (float y = 0; y < WATER_HEIGHT; ++y) {
                 for (float z = 0; z < CHUNK_WIDTH; ++z) {
 
                     //Add the difference for each chunk, plus noise values.
@@ -65,20 +71,9 @@ public:
 
 
                     float value = GenerateNoisePoint(xPos, yPos, zPos);
-                    value += 1;
-
-                    /*
-                     *
-                     * Example:
-                     * If Y, which is out height, is larger than the value SimplexNoise has returned,
-                     * based on X, Y and Z, then we will NOT draw that cube.
-                     *
-                     * This way, we can always calulcate our way back to every block, which comes
-                     * in handy later when we need to know which side of the cube to draw.
-                     */
 
 
-                    if(value > y)
+                    if(value < y)
                     {
                         map[(int)x][(int)y][(int)z] = 1;
                     } else {
@@ -90,6 +85,7 @@ public:
         //After map is created, we need to determine which side/vertices to draw
         bindChunkIntoVertices();
     }
+    //Stone Chunk
     Chunk(glm::vec3 chunkPos, long seed)
     {
         pos = chunkPos;
@@ -111,7 +107,7 @@ public:
                     /*
                      *
                      * Example:
-                     * If Y, which is out height, is larger than the value SimplexNoise has returned,
+                     * If Y, which is our height, is larger than the value SimplexNoise has returned,
                      * based on X, Y and Z, then we will NOT draw that cube.
                      *
                      * This way, we can always calulcate our way back to every block, which comes
@@ -147,14 +143,24 @@ public:
         }
         return value;
     }
-
+    /*
+     * Method for filtering out which side of a cube to draw.
+     * Proceeds to check each side of each cube, and only draw that
+     * cube which has an invisible cube in that direction
+     */
     void bindChunkIntoVertices()
     {
-        float xPos, yPos, zPos;
+        //Contains vertices for current cube.
         std::vector<float> vertices_holder;
         for(int x = 0; x < CHUNK_WIDTH; ++x) {
             for (int y = 0; y < CHUNK_HEIGHT; ++y) {
                 for (int z = 0; z < CHUNK_WIDTH; ++z) {
+
+                    //Empty previous cubes vertices
+                    vertices_holder.clear();
+
+                    //If current chunk is water chunk, do not proceed after set water height.
+                    if(isWater && y >= WATER_HEIGHT) continue;
 
                     //Current cube equals 0(Not-visible), then no need to go any further.
                     if(map[x][y][z] == 0) continue;
@@ -162,8 +168,6 @@ public:
 
                     //Create a new cube, based on X and Z position of chunk.
                     Cube cube = Cube(x+pos.x, y, z+pos.z, true);
-
-
                     float value = GenerateNoisePoint((x+pos.x),(y+pos.y),(z+pos.z));
 
                     //If block is at top of chunk, then top is visible
@@ -171,7 +175,6 @@ public:
                     {
                         cube.useTop();
                     }
-
 
                     if(y > 0)
                     {
@@ -189,18 +192,42 @@ public:
                     {
                         if(map[x+1][y][z] != 1) cube.useLeft();
                     }
+
                     if(z > 0)
                     {
                         if(map[x][y][z-1] != 1) cube.useBack();
                     }
+
                     if(z < CHUNK_WIDTH - 1)
                     {
                         if(map[x][y][z+1] != 1) cube.useFront();
                     }
 
-                    /*
-                     * We then need to check if current cube hits anything outside of current chunk.
-                     */
+                    //DEBUG
+
+                    /*if(x == 0)
+                    {
+                        cube.useRight();
+                    }
+                    if(x == CHUNK_WIDTH-1)
+                    {
+                        cube.useRight();
+                    }
+                    if(z == 0)
+                    {
+                        cube.useBack();
+                    }
+                    if(z == CHUNK_WIDTH-1)
+                    {
+                        cube.useFront();
+                    }*/
+
+
+                    //END DEBUG
+
+                     //We then need to check if current cube hits anything outside of current chunk.
+
+
                     if(z == 0)
                     {
                         float zDiff = z+pos.z-1;
@@ -241,9 +268,10 @@ public:
 
 
 
+
+
                     vertices_holder = cube.getVertices();
                     vertices.insert(vertices.end(), vertices_holder.begin(), vertices_holder.end());
-                    vertices_holder.clear();
                 }
             }
         }

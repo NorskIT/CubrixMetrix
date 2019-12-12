@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/mikecraft.dir/Chunk.cpp.o"
   "CMakeFiles/mikecraft.dir/ChunkManager.cpp.o"
   "CMakeFiles/mikecraft.dir/Cube.cpp.o"
+  "CMakeFiles/mikecraft.dir/FlyCamera.cpp.o"
   "CMakeFiles/mikecraft.dir/Shader.cpp.o"
   "CMakeFiles/mikecraft.dir/dep/SimplexNoise.cpp.o"
   "CMakeFiles/mikecraft.dir/glad.c.o"
