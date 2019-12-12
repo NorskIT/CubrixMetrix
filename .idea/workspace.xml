@@ -3,12 +3,12 @@
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
       <config projectName="mikecraft" targetName="glfw" />
-      <config projectName="mikecraft" targetName="mikecraft" />
       <config projectName="mikecraft" targetName="glew" />
-      <config projectName="mikecraft" targetName="uninstall" />
       <config projectName="mikecraft" targetName="glew_s" />
       <config projectName="mikecraft" targetName="glewinfo" />
       <config projectName="mikecraft" targetName="visualinfo" />
+      <config projectName="mikecraft" targetName="mikecraft" />
+      <config projectName="mikecraft" targetName="uninstall" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -19,11 +19,18 @@
   <component name="ChangeListManager">
     <list default="true" id="2f42a0ff-6c92-470d-9a2f-9015e8f77111" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chunk.h" beforeDir="false" afterPath="$PROJECT_DIR$/Chunk.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChunkManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/ChunkManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cube.h" beforeDir="false" afterPath="$PROJECT_DIR$/Cube.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlyCamera.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlyCamera.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/camera.h" beforeDir="false" afterPath="$PROJECT_DIR$/camera.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/Chunk.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/Chunk.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/ChunkManager.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/ChunkManager.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/main.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/mikecraft" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/mikecraft" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -52,30 +59,27 @@
   </component>
   <component name="ProjectId" id="1T9fhd1PskK3CorC2rwMhk8WAcv" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/images" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/images" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/images" />
       <recent name="$PROJECT_DIR$/shaders" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/images" />
+    </key>
   </component>
   <component name="RunManager" selected="CMake Application.mikecraft">
     <configuration name="glew" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mikecraft" TARGET_NAME="glew" CONFIG_NAME="Debug">
@@ -123,6 +127,18 @@
       <item itemvalue="CMake Application.glfw" />
     </list>
   </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -143,7 +159,19 @@
       <workItem from="1573116686729" duration="18604000" />
       <workItem from="1573203370998" duration="16410000" />
       <workItem from="1573304675556" duration="34706000" />
-      <workItem from="1573380283841" duration="24579000" />
+      <workItem from="1573380283841" duration="28811000" />
+      <workItem from="1573420684734" duration="602000" />
+      <workItem from="1573547812526" duration="8138000" />
+      <workItem from="1573633315226" duration="17235000" />
+      <workItem from="1573725435837" duration="8831000" />
+      <workItem from="1573803090424" duration="12425000" />
+      <workItem from="1574160857381" duration="2602000" />
+      <workItem from="1575540772778" duration="599000" />
+      <workItem from="1575626749118" duration="1068000" />
+      <workItem from="1575801518740" duration="5422000" />
+      <workItem from="1575968087179" duration="2042000" />
+      <workItem from="1575984898301" duration="4917000" />
+      <workItem from="1576134031337" duration="16540000" />
     </task>
     <servers />
   </component>
@@ -163,13 +191,60 @@
       </map>
     </option>
   </component>
+  <component name="WindowStateProjectService">
+    <state width="1807" height="173" key="GridCell.Tab.0.bottom" timestamp="1576152231625">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state width="1807" height="173" key="GridCell.Tab.0.bottom/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576152231625" />
+    <state width="1874" height="179" key="GridCell.Tab.0.bottom/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@3000.840.1920.1080" timestamp="1575816553370" />
+    <state width="1807" height="173" key="GridCell.Tab.0.center" timestamp="1576152231625">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state width="1807" height="173" key="GridCell.Tab.0.center/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576152231625" />
+    <state width="1874" height="179" key="GridCell.Tab.0.center/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@3000.840.1920.1080" timestamp="1575816553369" />
+    <state width="1807" height="173" key="GridCell.Tab.0.left" timestamp="1576152231625">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state width="1807" height="173" key="GridCell.Tab.0.left/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576152231625" />
+    <state width="1874" height="179" key="GridCell.Tab.0.left/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@3000.840.1920.1080" timestamp="1575816553369" />
+    <state width="1807" height="173" key="GridCell.Tab.0.right" timestamp="1576152231625">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state width="1807" height="173" key="GridCell.Tab.0.right/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576152231625" />
+    <state width="1874" height="179" key="GridCell.Tab.0.right/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@3000.840.1920.1080" timestamp="1575816553369" />
+    <state width="1807" height="348" key="GridCell.Tab.1.bottom" timestamp="1576147714991">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state width="1807" height="348" key="GridCell.Tab.1.bottom/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576147714991" />
+    <state width="1807" height="348" key="GridCell.Tab.1.center" timestamp="1576147714991">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state width="1807" height="348" key="GridCell.Tab.1.center/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576147714991" />
+    <state width="1807" height="348" key="GridCell.Tab.1.left" timestamp="1576147714991">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state width="1807" height="348" key="GridCell.Tab.1.left/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576147714991" />
+    <state width="1807" height="348" key="GridCell.Tab.1.right" timestamp="1576147714991">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state width="1807" height="348" key="GridCell.Tab.1.right/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576147714991" />
+    <state x="1688" y="1207" key="com.intellij.ide.util.TipDialog" timestamp="1576134217692">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state x="1688" y="1207" key="com.intellij.ide.util.TipDialog/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576134217692" />
+    <state x="3608" y="1207" key="com.intellij.ide.util.TipDialog/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@3000.840.1920.1080" timestamp="1575968089154" />
+    <state x="1818" y="1035" width="501" height="723" key="refactoring.ChangeSignatureDialog" timestamp="1576139424609">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state x="1818" y="1035" width="501" height="723" key="refactoring.ChangeSignatureDialog/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576139424609" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/ChunkManager.h</url>
-          <line>249</line>
-          <option name="timeStamp" value="28" />
+          <line>238</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

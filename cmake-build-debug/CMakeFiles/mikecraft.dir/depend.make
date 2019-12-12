@@ -17,6 +17,9 @@ CMakeFiles/mikecraft.dir/ChunkManager.cpp.o: ../dep/SimplexNoise.h
 CMakeFiles/mikecraft.dir/Cube.cpp.o: ../Cube.cpp
 CMakeFiles/mikecraft.dir/Cube.cpp.o: ../Cube.h
 
+CMakeFiles/mikecraft.dir/FlyCamera.cpp.o: ../FlyCamera.cpp
+CMakeFiles/mikecraft.dir/FlyCamera.cpp.o: ../FlyCamera.h
+
 CMakeFiles/mikecraft.dir/Shader.cpp.o: ../Shader.cpp
 CMakeFiles/mikecraft.dir/Shader.cpp.o: ../Shader.h
 
@@ -27,6 +30,7 @@ CMakeFiles/mikecraft.dir/main.cpp.o: ../includes/glfw-3.3/include/GLFW/glfw3.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../Chunk.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../ChunkManager.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../Cube.h
+CMakeFiles/mikecraft.dir/main.cpp.o: ../FlyCamera.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../Shader.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../camera.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../dep/SimplexNoise.h

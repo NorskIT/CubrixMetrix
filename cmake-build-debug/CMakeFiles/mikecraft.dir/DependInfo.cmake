@@ -17,6 +17,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/mike/CLionProjects/mikecraft/Chunk.cpp" "/home/mike/CLionProjects/mikecraft/cmake-build-debug/CMakeFiles/mikecraft.dir/Chunk.cpp.o"
   "/home/mike/CLionProjects/mikecraft/ChunkManager.cpp" "/home/mike/CLionProjects/mikecraft/cmake-build-debug/CMakeFiles/mikecraft.dir/ChunkManager.cpp.o"
   "/home/mike/CLionProjects/mikecraft/Cube.cpp" "/home/mike/CLionProjects/mikecraft/cmake-build-debug/CMakeFiles/mikecraft.dir/Cube.cpp.o"
+  "/home/mike/CLionProjects/mikecraft/FlyCamera.cpp" "/home/mike/CLionProjects/mikecraft/cmake-build-debug/CMakeFiles/mikecraft.dir/FlyCamera.cpp.o"
   "/home/mike/CLionProjects/mikecraft/Shader.cpp" "/home/mike/CLionProjects/mikecraft/cmake-build-debug/CMakeFiles/mikecraft.dir/Shader.cpp.o"
   "/home/mike/CLionProjects/mikecraft/dep/SimplexNoise.cpp" "/home/mike/CLionProjects/mikecraft/cmake-build-debug/CMakeFiles/mikecraft.dir/dep/SimplexNoise.cpp.o"
   "/home/mike/CLionProjects/mikecraft/main.cpp" "/home/mike/CLionProjects/mikecraft/cmake-build-debug/CMakeFiles/mikecraft.dir/main.cpp.o"
@@ -31,7 +32,6 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
   "/home/mike/CLionProjects/mikecraft/cmake-build-debug/includes/glfw-3.3/src/CMakeFiles/glfw.dir/DependInfo.cmake"
-  "/home/mike/CLionProjects/mikecraft/cmake-build-debug/includes/glew-2.1.0/build/cmake/CMakeFiles/glew.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

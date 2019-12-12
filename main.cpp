@@ -7,11 +7,9 @@
 #include "stb_image.h"
 #include "Cube.h"
 #include "ChunkManager.h"
-
+#include "FlyCamera.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
-
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -24,23 +22,28 @@ void RenderWorld();
 void renderChunks(unsigned int diff, unsigned int VertexArray);
 
 // settings
-const unsigned int SCR_WIDTH = 1280;
-const unsigned int SCR_HEIGHT = 720;
+#define SCR_WIDTH 1280
+#define SCR_HEIGHT 720
 
-unsigned int VBO[10]; //10 chunks to render
-unsigned int cubeVAO[10], lightVAO;
-
-
+/*
+ * We need 2 vertex arrays/objects to store our generated vertices
+ *  1. World 1
+ *  2. Water (possible more)
+ */
+unsigned int VBO[2]; //11 chunks to render
+unsigned int cubeVAO[2], lightVAO;
 
 //DEBUG
-int i = 0;
-bool CanMoveMouse = true;
+bool mouseIsDisabled = true;
 
-// camera
-Camera camera(glm::vec3((CHUNK_WIDTH/2), CHUNK_HEIGHT, (CHUNK_WIDTH/2)));
+// Create camera, set it to the center of first chunk
+//Camera camera(glm::vec3((CHUNK_WIDTH/2), CHUNK_HEIGHT, (CHUNK_WIDTH/2)));
+
+FlyCamera flyCamera(glm::vec3((CHUNK_WIDTH/2), CHUNK_HEIGHT, (CHUNK_WIDTH/2)));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
+float zoomVariable = 1;
 
 // timing
 float deltaTime = 0.0f;
@@ -49,20 +52,17 @@ float lastFrame = 0.0f;
 // Stores all vertices for our world
 ChunkManager chunkManager;
 
-float zoomVariable = 1;
 
-bool debug = true;
+
+bool debug = false;
+bool showWater = true;
 
 int main()
 {
-    // glfw: initialize and configure
-    // ------------------------------
+    //Initialize glfw
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    //Create window.
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "X Y Z", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -70,9 +70,15 @@ int main()
         return -1;
     }
     glfwMakeContextCurrent(window);
-    //Listeners
+
+    /*
+     * Listeners
+     */
+    //if window frame changes
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    //If cursor position changes
     glfwSetCursorPosCallback(window, mouse_callback);
+    //If mouse scroll changes
     glfwSetScrollCallback(window, scroll_callback);
 
 
@@ -83,146 +89,89 @@ int main()
         return -1;
     }
 
-
+    //Enable depth, without everything draws on top of eachother
     glEnable(GL_DEPTH_TEST);
 
-    Shader lightingShader("../shaders/model.vert", "../shaders/model.frag");
-    //Shader lampShader("../shaders/default.vert", "./shaders/default.frag");
+    Shader shader("../shaders/shader.vert", "../shaders/shader.frag");
 
-    //Crating ChunkManager
+    glGenVertexArrays(3, cubeVAO);
+    glGenBuffers(3, VBO);
 
-
-
-
-
-    glGenVertexArrays(10, cubeVAO);
-    glGenBuffers(10, VBO);
-
-    chunkManager = ChunkManager(camera.Position);
+    chunkManager = ChunkManager(flyCamera.position);
     RenderWorld();
 
-    /*glGenVertexArrays(1, &lightVAO);
-    glBindVertexArray(lightVAO);
+    unsigned int grass = loadTexture("../images/grassWide.jpg");
+    unsigned int water = loadTexture("../images/water.png");
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    */
-
-    // load textures (we now use a utility function to keep the code more organized)
-    // -----------------------------------------------------------------------------
-    unsigned int sImg = loadTexture("../images/s.jpg");
-    unsigned int eImg = loadTexture("../images/e.jpg");
-    unsigned int wImg = loadTexture("../images/w.jpg");
-    unsigned int nImg = loadTexture("../images/n.jpg");
-    unsigned int cImg = loadTexture("../images/c.jpg");
-    unsigned int neImg = loadTexture("../images/ne.jpg");
-    unsigned int nwImg = loadTexture("../images/nw.jpg");
-    unsigned int swImg = loadTexture("../images/sw.jpg");
-    unsigned int seImg = loadTexture("../images/se.jpg");
-
-    unsigned int grass = loadTexture("../grassWide.jpg");
-    unsigned int containerImg = loadTexture("../container.jpg");
-
-    // shader configuration
-    // --------------------
-    lightingShader.use();
-    lightingShader.setInt("material.diffuse", 0);
-    lightingShader.setInt("material.specular", 1);
+    glUseProgram(shader.ID);
+    glUniform1i(glGetUniformLocation(shader.ID, "diffuseMaterial"), 0);
 
 
-    // render loop
-    // -----------
     while (!glfwWindowShouldClose(window))
     {
-        // per-frame time logic
-        // --------------------
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        // input
-        // -----
         processInput(window);
-        // render
-        // ------
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        chunkManager.CheckWherePlayerPosition(camera.Position);
 
-        std::string title = "X: " + std::to_string(camera.Position.x-0.5);
-        title += " Y: " + std::to_string(camera.Position.y-0.5);
-        title += " Z: " + std::to_string(camera.Position.z-0.5);
+        glClearColor(0.4f, 0.4f, 0.5f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        //Check if player position is outside of current chunk-system.
+        chunkManager.checkPlayerPosition(flyCamera.position);
+
+        //Build title string, showing player position
+        std::string title = "X: " + std::to_string(flyCamera.position.x-0.5) +
+                " Y: " + std::to_string(flyCamera.position.y-0.5) +
+                " Z: " + std::to_string(flyCamera.position.z-0.5);
+        //Set string to window title.
         glfwSetWindowTitle(window, title.c_str());
 
-        // be sure to activate shader when setting uniforms/drawing objects
-        lightingShader.use();
-        lightingShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
-        lightingShader.setVec3("viewPos", camera.Position);
-        // light properties
-        lightingShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
-        lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-        lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-        // material properties
-        lightingShader.setFloat("material.shininess", 32.0f);
+        // Create projection mat
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
+        glm::mat4 view = flyCamera.GetView();
 
-        // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom*zoomVariable), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-        lightingShader.setMat4("projection", projection);
-        lightingShader.setMat4("view", view);
+        //Enable our shader program
+        glUseProgram(shader.ID);
+        glUniform3f(glGetUniformLocation(shader.ID, "ViewPos"), flyCamera.position.x, flyCamera.position.y, flyCamera.position.z);
+        glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, &projection[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shader.ID, "view"), 1, GL_FALSE, &view[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, &glm::mat4(1.0f)[0][0]);
 
-        // world transformation
-        glm::mat4 model = glm::mat4(1.0f);
-        lightingShader.setMat4("model", model);
+        //Draw all our vertices
+        renderChunks(grass, cubeVAO[0]);
+        renderChunks(water, cubeVAO[1]);
 
 
-        if(debug) {
-            renderChunks(grass, cubeVAO[9]);;
-        }else {
-            for(unsigned int x : cubeVAO)
-            {
-                renderChunks(grass, x);
-            }
-
-        }
+        //If player has moved, then we need to add and render the new vertices which has been added.
         if(chunkManager.hasPlayerMoved)
         {
             RenderWorld();
             chunkManager.hasPlayerMoved = false;
-            ++i;
         }
-
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-    glDeleteVertexArrays(10, cubeVAO);
-    glDeleteVertexArrays(1, &lightVAO);
-    glDeleteBuffers(10, VBO);
-
+    //Release vertex and buffers
+    glDeleteVertexArrays(2, cubeVAO);
+    glDeleteBuffers(2, VBO);
     glfwTerminate();
     return 0;
 }
 
-void renderChunks(unsigned int diff, unsigned int VertexArray)
+/**
+ * Activates, binds and draws the vertex array
+ * @param texture, texture to draw on the vertices
+ * @param VertexArray, reference to which vertex array to use
+ */
+void renderChunks(unsigned int texture, unsigned int VertexArray)
 {
-    // bind diffuse map
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diff);
-
-    // bind specular map
-    /*glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, spec);*/
-
+    glBindTexture(GL_TEXTURE_2D, texture);
     glBindVertexArray(VertexArray);
-    glDrawArrays(GL_TRIANGLES, 0, chunkManager.world1.size());
-    //TODO: Spørsmål: 9 av 10 lister har like størrelse,
-    //      Den siste er mye større. Hvorfor er jeg nødt til å bruke den største størrlsen?
-    //      Hvorfor kan jeg ikke ikke si at "hvis VertexArray er 10, så skal vi bruker world1.size", ellers "bruk c.size()"
-
-
+    glDrawArrays(GL_TRIANGLES, 0, chunkManager.world.size());
 }
 
 void processInput(GLFWwindow *window)
@@ -231,19 +180,22 @@ void processInput(GLFWwindow *window)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        flyCamera.UpdateCamera(FlyCamera::FORWARD);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        flyCamera.UpdateCamera(FlyCamera::BACKWARD);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        flyCamera.UpdateCamera(FlyCamera::LEFT);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
-
+        flyCamera.UpdateCamera(FlyCamera::RIGHT);
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        flyCamera.UpdateCamera(FlyCamera::ASCEND);
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        flyCamera.UpdateCamera(FlyCamera::DESCEND);
+
+    /*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
     {
-        //chunkManager.generateChunk(camera.Position);
-        RenderWorld();
-    }
+        chunkManager.water = {};
+    }*/
 
 
 }
@@ -256,7 +208,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    if(CanMoveMouse) return;
+    if(mouseIsDisabled) return;
     if (firstMouse)
     {
         lastX = xpos;
@@ -270,14 +222,22 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    flyCamera.mouseDirectionChange(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    //camera.ProcessMouseScroll(yoffset);
-
-
+    /*
+     * Scroll inputs.
+     *      alt+forward scroll locks cursor.
+     *      alt+backward scroll unlocks cursor
+     *
+     *      shift+forward scroll increases FOV
+     *      shift+forward scroll decreases FOV
+     *
+     *      forward scroll increased movement speed
+     *      forward scroll decreases resets movement speed
+     */
     if(yoffset > 0) {
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         {
@@ -286,9 +246,9 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
         else if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            CanMoveMouse = false;
+            mouseIsDisabled = false;
         } else {
-            camera.MovementSpeed += 20;
+            flyCamera.flightSpeed += 0.1;
         }
     } else {
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
@@ -298,28 +258,36 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
         else if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            CanMoveMouse = true;
+            mouseIsDisabled = true;
         } else {
-            camera.MovementSpeed = 2;
+            flyCamera.flightSpeed = 0.1f;
         }
     }
 }
 
+/**
+ * Starts process of rendering all vertex attrib arrays
+ */
 void RenderWorld()
 {
-    VertexAttribArray(chunkManager.centerChunks[0].vertices, VBO[0], cubeVAO[0]);
-    VertexAttribArray(chunkManager.centerChunks[1].vertices, VBO[1], cubeVAO[1]);
-    VertexAttribArray(chunkManager.centerChunks[2].vertices, VBO[2], cubeVAO[2]);
-    VertexAttribArray(chunkManager.centerChunks[3].vertices, VBO[3], cubeVAO[3]);
-    VertexAttribArray(chunkManager.centerChunks[4].vertices, VBO[4], cubeVAO[4]);
-    VertexAttribArray(chunkManager.centerChunks[5].vertices, VBO[5], cubeVAO[5]);
-    VertexAttribArray(chunkManager.centerChunks[6].vertices, VBO[6], cubeVAO[6]);
-    VertexAttribArray(chunkManager.centerChunks[7].vertices, VBO[7], cubeVAO[7]);
-    VertexAttribArray(chunkManager.centerChunks[8].vertices, VBO[8], cubeVAO[8]);
-    VertexAttribArray(chunkManager.world1, VBO[9], cubeVAO[9]);
+    /*
+     * VBO[0] contains all terrain vertices.
+     * VBO[1] contains all water vertices.
+     */
+    VertexAttribArray(chunkManager.world, VBO[0], cubeVAO[0]);
+    if(showWater)
+    {
+        VertexAttribArray(chunkManager.water, VBO[1], cubeVAO[1]);
+    }
+
 }
 
-
+/**
+ * Binds the vertices data to our vertex buffer
+ * @param vertices, vertices to add.
+ * @param vertexBuffer, which buffer to add vertices to.
+ * @param vertexArray, which vertex array to bind to.
+ */
 void VertexAttribArray(std::vector<float> vertices, unsigned int vertexBuffer, unsigned int vertexArray)
 {
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -333,6 +301,11 @@ void VertexAttribArray(std::vector<float> vertices, unsigned int vertexBuffer, u
     glEnableVertexAttribArray(2);
 }
 
+/**
+ * Loads in binds texture into TexImage2D
+ * @param path, path to texture
+ * @return unsigned int reference to texture
+ */
 unsigned int loadTexture(char const * path)
 {
     unsigned int textureID;
@@ -353,7 +326,6 @@ unsigned int loadTexture(char const * path)
         glBindTexture(GL_TEXTURE_2D, textureID);
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

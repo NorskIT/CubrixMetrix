@@ -412,6 +412,12 @@
 		<Unit filename="/home/mike/CLionProjects/mikecraft/Cube.h">
 			<Option target="mikecraft"/>
 		</Unit>
+		<Unit filename="/home/mike/CLionProjects/mikecraft/FlyCamera.cpp">
+			<Option target="mikecraft"/>
+		</Unit>
+		<Unit filename="/home/mike/CLionProjects/mikecraft/FlyCamera.h">
+			<Option target="mikecraft"/>
+		</Unit>
 		<Unit filename="/home/mike/CLionProjects/mikecraft/Shader.cpp">
 			<Option target="mikecraft"/>
 		</Unit>

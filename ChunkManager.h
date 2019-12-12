@@ -13,258 +13,244 @@
 #include "glm/gtc/noise.hpp"
 #include "dep/SimplexNoise.h"
 #include "Chunk.h"
+#include <math.h>
 
-
-
-
+/**
+ * The Chunk manager manages all the chunks generated
+ */
 class ChunkManager {
 
-    //Think of a chunk as 4 blocks. These are the names representing these blocks.
+    //Think of a chunk as flat quad with 4 sides. These are the names representing the sides.
     enum GenerateDirection {
-        UP,
-        DOWN,
+        FORWARD,
+        BACKWARD,
         LEFT,
         RIGHT
     };
 
-    /*
-     * [NW][N ][NE]
-     * [W ][C ][E ]
-     * [SW][S ][SE]
-     */
-    enum CenterPosition {
-
-        NW=0,
-        N=1,
-        NE=2,
-        W=3,
-        C=4,
-        E=5,
-        SW=6,
-        S=7,
-        SE=8
-    };
 
 public:
+    //Main list containing all vertices for terrain
+    std::vector<float> world;
+    //Main list containing al vertices for water
+    std::vector<float> water;
 
-    std::vector<Chunk> cachedChunks;
-    Chunk centerChunks[9];
-    Chunk water;
-
-    std::vector<float> world1; //Cache
-
-    glm::vec2 playerChunkPos; //Which chunk player is in. Example, if he's in the 3rd created chunk, he would be in 0,3.
-
+    //A bool which is used to check if user has moved out of pre-generated chunks
     bool hasPlayerMoved = false;
 
     long seed;
-
-    int i = 0;
 
     ChunkManager() = default;
     ChunkManager(glm::vec3 playerPos)
     {
         startupGenerateChunk(playerPos);
-        seed = 1; //rand()%(1000000-0 + 1);
+        //Generate a random seed, so that we wont have to end up with same terrain generation every time.
+        seed = rand()%(1000000-0 + 1);
         std::cout << "seed: " << seed << std::endl;
     }
 
-    void CheckWherePlayerPosition(glm::vec3 playerPos)
+    /**
+     * Checks the players position and starts the process of generating new chunk
+     * if the player has moved outside of the chunk the player was in.
+     * @param playerPos , players current position
+     */
+    void checkPlayerPosition(glm::vec3 playerPos)
     {
 
         /* To find First X and Z of chunk the player stands in, we have to divide
-         * the players X and Y coord by 16, so that we know how many chunk out of world
-         * center we are, then we multiply by 16, so that we get the exact X and Y coord
-         * of 0,0 of current chunk
+         * the players X and Y coord by CHUNK_WIDTH, so that we know how many chunk out of world
+         * center we are, then we multiply by CHUNK_WIDTH, so that we get the exact X and Y coord
+         * of 0,0(Start position) of that chunk the player is in
          */
-        int currentPlayerChunkX= (int)((floor(playerPos.x))/CHUNK_WIDTH)*CHUNK_WIDTH;
-        int currentPlayerChunkZ= (int)((floor(playerPos.z)) / CHUNK_WIDTH) * CHUNK_WIDTH;
+        int currentPlayerChunkX = (int)((floor(playerPos.x)) / CHUNK_WIDTH) * CHUNK_WIDTH;
+        int currentPlayerChunkZ = (int)((floor(playerPos.z)) / CHUNK_WIDTH) * CHUNK_WIDTH;
         if(playerPos.x < 0) {
             currentPlayerChunkX -= CHUNK_WIDTH;
         }if(playerPos.z < 0) {
             currentPlayerChunkZ -= CHUNK_WIDTH;
         }
 
-
+        //If player has moved outside of currents chunk RIGHT side, generate new chunk on RIGHT side.
         if(currentPlayerChunkX < playerChunkPos.x)
         {
             generateChunk(RIGHT, currentPlayerChunkX, currentPlayerChunkZ);
-            std::cout << "Player move RIGHT to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkZ << std::endl;
         }
+
+        //If player has moved outside of currents chunk LEFT side, generate new chunk on LEFT side.
         if(currentPlayerChunkX > playerChunkPos.x)
         {
             generateChunk(LEFT, currentPlayerChunkX, currentPlayerChunkZ);
-            std::cout << "Player move LEFT to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkZ << std::endl;
         }
+
+        //If player has moved outside of currents chunk FORWARD side, generate new chunk on FORWARD side.
         if(currentPlayerChunkZ > playerChunkPos.y)
         {
-            generateChunk(UP, currentPlayerChunkX, currentPlayerChunkZ);
-            std::cout << "Player move UP to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkZ << std::endl;
+            generateChunk(FORWARD, currentPlayerChunkX, currentPlayerChunkZ);
         }
+
+        //If player has moved outside of currents chunk BACKWARD side, generate new chunk on BACKWARD side.
         if(currentPlayerChunkZ < playerChunkPos.y)
         {
-            generateChunk(DOWN, currentPlayerChunkX, currentPlayerChunkZ);
-            std::cout << "Player move DOWN to chunk: " << currentPlayerChunkX << ", " << currentPlayerChunkZ << std::endl;
+            generateChunk(BACKWARD, currentPlayerChunkX, currentPlayerChunkZ);
         }
-        if(playerChunkPos.x != currentPlayerChunkX || playerChunkPos.y != currentPlayerChunkZ)
-        {
-            std::cout << "Player has move into a different chunk" << std::endl;
-            std::cout << "World1 size: " << world1.size() << std::endl;
-        }
+        //Sets the players chunk pos to current player chunk pos.
         playerChunkPos.x = currentPlayerChunkX;
         playerChunkPos.y = currentPlayerChunkZ;
 
     }
 
     /*
-     * We use this only 1 time. This is for generating all the
-     * terrain around the player, when the player enters the world.
+     * Startup function, to generate all chunks around the player at startup
      */
     void startupGenerateChunk(glm::vec3 playerPosDirection) {
 
         int chunkPosX = (((int)floor(playerPosDirection.x))/CHUNK_WIDTH)*CHUNK_WIDTH;
         int chunkPosZ = (((int)floor(playerPosDirection.z))/CHUNK_WIDTH)*CHUNK_WIDTH;
-        centerChunks[NW] = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
-        centerChunks[N] = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ+CHUNK_WIDTH), seed);
-        centerChunks[NE] = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
-        centerChunks[W] = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ), seed);
-        centerChunks[C] = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ), seed);
-        centerChunks[E] = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ), seed);
-        centerChunks[SW] = Chunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
-        centerChunks[S] = Chunk(glm::vec3(chunkPosX, 0, chunkPosZ-CHUNK_WIDTH), seed);
-        centerChunks[SE] = Chunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
-        for(Chunk cc : centerChunks)
-        {
-            InsertIntoCache(cc);
-        }
-    }
 
-        void generateChunk(GenerateDirection direction, int chunkPosX, int chunkPosZ)
+        //Create new chunk, try to add that chunk into chache.
+        TryAppendToCache(createChunk(glm::vec3(chunkPosX + CHUNK_WIDTH, 0, chunkPosZ + CHUNK_WIDTH)));
+        TryAppendToCache(createChunk(glm::vec3(chunkPosX - CHUNK_WIDTH, 0, chunkPosZ - CHUNK_WIDTH)));
+        TryAppendToCache(createChunk(glm::vec3(chunkPosX + CHUNK_WIDTH, 0, chunkPosZ - CHUNK_WIDTH)));
+        TryAppendToCache(createChunk(glm::vec3(chunkPosX - CHUNK_WIDTH, 0, chunkPosZ)));
+        TryAppendToCache(createChunk(glm::vec3(chunkPosX + CHUNK_WIDTH, 0, chunkPosZ)));
+        TryAppendToCache(createChunk(glm::vec3(chunkPosX, 0, chunkPosZ - CHUNK_WIDTH)));
+        TryAppendToCache(createChunk(glm::vec3(chunkPosX, 0, chunkPosZ + CHUNK_WIDTH)));
+        TryAppendToCache(createChunk(glm::vec3(chunkPosX, 0, chunkPosZ)));
+    }
+    
+    /**
+     * Generates THREE new chunks in said direction.
+     *
+     * @param direction , direction to generate
+     * @param chunkPosX , players current chunk pos X
+     * @param chunkPosZ , players current chunk pos Z
+     */
+    void generateChunk(GenerateDirection direction, int chunkPosX, int chunkPosZ)
         {
-            Chunk lastNW = centerChunks[NW];
-            Chunk lastNE = centerChunks[NE];
-            Chunk lastSW = centerChunks[SW];
-            Chunk lastSE = centerChunks[SE];
-            Chunk lastS = centerChunks[S];
-            Chunk lastW = centerChunks[W];
-            Chunk lastE = centerChunks[E];
-            Chunk lastN = centerChunks[N];
-            Chunk lastC = centerChunks[C];
+            Chunk chunks[3];
+
+            /*
+             * Consider the chunk area as following:
+             *
+             *      [NW]  [N ]  [NE]
+             *      [W ]  [C ]  [E ]
+             *      [SW ] [S ]  [SE]
+             *
+             * C is center, and is the current chunk of where the player is.
+             * If player moves outside of center, we will generate new chunk on that side the player moved outside.
+             *
+             * So, if player move from C to W, we will generate new chunk in direction LEFT.
+             */
+
+            // if LEFT, generate SW, W, NW
             if(direction == RIGHT)
             {
-                // if LEFT, generate SW, W, NW
-                Chunk swChunk = createChunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
-                Chunk wChunk = createChunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ), seed);
-                Chunk nwChunk = createChunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
-                centerChunks[C ] = lastW;
-                centerChunks[N ] = lastNW;
-                centerChunks[S ] = lastSW;
-                centerChunks[NE] = lastN;
-                centerChunks[E ] = lastC;
-                centerChunks[SE] = lastS;
-                centerChunks[SW] = swChunk;
-                centerChunks[W ] = wChunk;
-                centerChunks[NW] = nwChunk;
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX - CHUNK_WIDTH, 0, chunkPosZ - CHUNK_WIDTH))); // SW
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX - CHUNK_WIDTH, 0, chunkPosZ + CHUNK_WIDTH))); // NW
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX - CHUNK_WIDTH, 0, chunkPosZ))); //W
+                return;
             }
-
+            // if RIGHT, generate SE, E, NE
             if(direction == LEFT)
             {
-                // if RIGHT, generate SE, E, NE
-                Chunk seChunk = createChunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
-                Chunk eChunk = createChunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ), seed);
-                Chunk neChunk = createChunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
-                centerChunks[C ]=lastE;
-                centerChunks[N ]=lastNE;
-                centerChunks[S ]=lastSE;
-                centerChunks[NW] = lastN;
-                centerChunks[W ] = lastC;
-                centerChunks[SW] = lastS;
-                centerChunks[SE] = seChunk;
-                centerChunks[E ] = eChunk;
-                centerChunks[NE] = neChunk;
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX + CHUNK_WIDTH, 0, chunkPosZ - CHUNK_WIDTH))); // SE
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX + CHUNK_WIDTH, 0, chunkPosZ + CHUNK_WIDTH))); // NE
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX + CHUNK_WIDTH, 0, chunkPosZ))); // E
+                return;
             }
-            if(direction == UP)
+            // if up, generate NW, N, NE
+            if(direction == FORWARD)
             {
-                // if up, generate NW, N, NE
-                Chunk nwChunk = createChunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
-                Chunk nChunk = createChunk(glm::vec3(chunkPosX, 0, chunkPosZ+CHUNK_WIDTH), seed);
-                Chunk neChunk = createChunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ+CHUNK_WIDTH), seed);
-                centerChunks[C ] = lastN;
-                centerChunks[W ] = lastNW;
-                centerChunks[E ] = lastNE;
-                centerChunks[SW] = lastW;
-                centerChunks[S ] = lastC;
-                centerChunks[SE] = lastE;
-                centerChunks[NW] = nwChunk;
-                centerChunks[N ] = nChunk;
-                centerChunks[NE] = neChunk;
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX - CHUNK_WIDTH, 0, chunkPosZ + CHUNK_WIDTH))); // NW
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX + CHUNK_WIDTH, 0, chunkPosZ + CHUNK_WIDTH))); // NE
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX, 0, chunkPosZ + CHUNK_WIDTH))); // N
+                return;
             }
-            if(direction == DOWN)
+            // if down, generate SW, S, SE
+            if(direction == BACKWARD)
             {
-                // if down, generate SW, S, SE
-                Chunk swChunk = createChunk(glm::vec3(chunkPosX-CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
-                Chunk sChunk = createChunk(glm::vec3(chunkPosX, 0, chunkPosZ-CHUNK_WIDTH), seed);
-                Chunk seChunk = createChunk(glm::vec3(chunkPosX+CHUNK_WIDTH, 0, chunkPosZ-CHUNK_WIDTH), seed);
-                centerChunks[C ] = lastS;
-                centerChunks[W ] = lastSW;
-                centerChunks[E ] = lastSE;
-                centerChunks[NW ] = lastW;
-                centerChunks[N ] = lastC;
-                centerChunks[NE] = lastE;
-                centerChunks[SW] = swChunk;
-                centerChunks[S ] = sChunk;
-                centerChunks[SE] = seChunk;
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX - CHUNK_WIDTH, 0, chunkPosZ - CHUNK_WIDTH))); // SW
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX + CHUNK_WIDTH, 0, chunkPosZ - CHUNK_WIDTH))); // SE
+                TryAppendToCache(createChunk(glm::vec3(chunkPosX, 0, chunkPosZ - CHUNK_WIDTH))); // S
+                return;
             }
-            for(Chunk cc : centerChunks)
-            {
-                InsertIntoCache(cc);
-            }
-            hasPlayerMoved = true;
+
     }
 
-    /*
-     * This methods will first check if the chunk we want to create exists within the cache.
-     * if it does, then we will return that chunk. If not, then we will create a new chunk.
+    /**
+     * Check first if the chunk we want to create exists within the cache.
+     * if it does, return cached chunk. If not, return new chunk.
+     * @param pos , chunk start position
+     * @return correct chunk
      */
-    Chunk createChunk(glm::vec3 pos, long seed)
+    Chunk createChunk(glm::vec3 pos)
     {
-        for(int x = 0; x < cachedChunks.size(); ++x)
+
+        for(auto & cachedChunk : cachedChunks)
         {
-            if(cachedChunks[x].equals(pos.x, pos.z))
+            if(cachedChunk.equals(pos.x, pos.z))
             {
-                return cachedChunks[x];
+                return cachedChunk;
             }
         }
-        return Chunk(glm::vec3(pos.x, pos.y, pos.z), seed);
+
+        //If no chunk was found in cache, then players has moved outside of pre-generated map
+        hasPlayerMoved = true;
+        return Chunk(glm::vec3(pos.x, pos.y, pos.z), seed);;
     }
+    /**
+     * Adds @chunk to a cache.
+     * Also creates water chunk for chunks that has no water.
+     * @param chunk , chunk to add to cache
+     */
+    void TryAppendToCache(Chunk chunk)
+    {
+        bool chunkHasWater = false;
+        Chunk waterChunk;
+        //Iterate through list of cached water chunks
+        for(auto & cachedWaterChunk : cachedWaterChunks)
+        {
+            //If water was found, set variable waterChunk to found water chunk.
+            if(cachedWaterChunk.equals(chunk.pos.x, chunk.pos.z))
+            {
+                chunkHasWater = true;
+                waterChunk = cachedWaterChunk;
+            }
+        }
+        //If no water was found, create water for @chunk position
+        if(!chunkHasWater)
+        {
+            waterChunk = Chunk(chunk, 3);
+        }
+
+        //Adds waterChunk to cache
+        cachedWaterChunks.insert(cachedWaterChunks.end(), waterChunk);
+        //Adds chunk to cache
+        cachedChunks.insert(cachedChunks.end(), chunk);
+
+        //Adds water chunk to world-water vertices
+        water.insert(water.end(), waterChunk.vertices.begin(), waterChunk.vertices.end());
+        //Adds chunk to world vertices
+        world.insert(world.end(), chunk.vertices.begin(), chunk.vertices.end());
+
+        //While world size exceeds 20m. Delete tails of cached chunk
+        while(world.size() > 20000000)
+        {
+            world.erase(world.begin(), world.begin()+cachedChunks[0].vertices.size());
+            cachedChunks.erase(cachedChunks.begin());
+            water.erase(water.begin(), water.begin()+cachedWaterChunks[0].vertices.size());
+            cachedWaterChunks.erase(cachedWaterChunks.begin());
+        }
 
 
-    void InsertIntoCache(Chunk chunk)
-    {
-        bool chunkAlreadyExists = false;
-        //Check if chunk exists in cache, if it does, move that chunk to front row
-        for(int x = 0; x < cachedChunks.size(); ++x)
-        {
-            if(cachedChunks[x].equals(chunk))
-            {
-                chunkAlreadyExists = true;
-                Chunk pend = cachedChunks[x];
-                cachedChunks.erase(cachedChunks.begin()+x);
-                cachedChunks.insert(cachedChunks.end(), pend);
-            }
-        }
-        //If chunk does not exists in cache, then append chunk to cache.
-        if(!chunkAlreadyExists)
-        {
-            cachedChunks.insert(cachedChunks.end(), chunk);
-            world1.insert(world1.end(), chunk.vertices.begin(), chunk.vertices.end());
-            while(cachedChunks.size() > 270/2)
-            {
-                cachedChunks.erase(cachedChunks.begin());
-                world1.erase(world1.begin(), world1.begin()+cachedChunks[0].vertices.size());
-            }
-        }
     }
+
+    private:
+    std::vector<Chunk> cachedChunks;
+    std::vector<Chunk> cachedWaterChunks;
+
+    //Which chunk player is in. Example, if he's in the 3rd created chunk, he would be in 0,3.
+    glm::vec2 playerChunkPos;
 };
 
 
