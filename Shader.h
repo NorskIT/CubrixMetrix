@@ -8,9 +8,13 @@
 #include <iostream>
 #include <sstream>
 
+/**
+ * Simple shader class for easy use of shaders
+ */
 class Shader
 {
 public:
+    //The programs set ID
     int ID;
     Shader(const char* vertexPath, const char* fragmentPath)
     {

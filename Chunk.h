@@ -13,10 +13,12 @@
 #include "dep/SimplexNoise.h"
 
 
-/*
+/* Information regarding chunk width and height
+ *   *   *   *   *   *   *   *   *   *   *   *   *
  * MAX WIDTH:
  *      Width 182
  *      Height 7
+ *
  * MAX HEIGHT
  *      Width 7
  *      Height 2500+ <- It just lags at this altitude.
@@ -30,6 +32,7 @@
 #define NOISE_WIDTH_X 60
 #define NOISE_WIDTH_Z 60
 
+//Water level
 #define WATER_HEIGHT 5
 
 /**
@@ -41,10 +44,9 @@ public:
 
     float map[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_WIDTH];
     std::vector<float> vertices;
-    std::vector<float> water;
     bool isWater = false;
     glm::vec3 pos;
-    long currentSeed;
+    long seed;
 
     /* Vec3 is to know where the chunk starts, so that we know where to continue
      * the terrain building/noise. Without this each chunk will look alike, and the
@@ -62,10 +64,10 @@ public:
      * @param chunkPos
      * @param seed
      */
-    Chunk(glm::vec3 chunkPos, long seed)
+    Chunk(glm::vec3 chunkPos, long chunkSeed)
     {
         pos = chunkPos;
-        currentSeed = seed;
+        seed = chunkSeed;
 
         //3 for loops, representing X,Y,Z coords.
         for(float x = 0; x < CHUNK_WIDTH; ++x) {
@@ -76,7 +78,7 @@ public:
                     float xPos = (x+pos.x);
                     float yPos = (y+pos.y);
                     float zPos = (z+pos.z);
-
+                    std::cout << seed << std::endl;
 
                     float value = GenerateNoisePoint(xPos, yPos, zPos);
 
@@ -153,8 +155,7 @@ public:
     float GenerateNoisePoint(float x, float y, float z)
     {
         //We divide it by set values, to dynamically edit the values more to our likings.
-        SimplexNoise noise = SimplexNoise(x/NOISE_WIDTH_X, y/NOISE_HEIGHT, z / NOISE_WIDTH_Z);
-        float value = noise.noise(x/NOISE_WIDTH_X, y / NOISE_HEIGHT, z / NOISE_WIDTH_Z) * (CHUNK_HEIGHT - 1) + 1;
+        float value = SimplexNoise::noise(x/NOISE_WIDTH_X, y / NOISE_HEIGHT, z / NOISE_WIDTH_Z) * (CHUNK_HEIGHT - 1) + 1;
         //If value is negative, make it positiv.
         if(value < 0) {
             value *= -1;

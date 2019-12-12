@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(mikecraft
                 main.cpp glad.c Shader.cpp
-                Shader.h camera.h Cube.cpp Cube.h
+                Shader.h Cube.cpp Cube.h
                 ChunkManager.cpp ChunkManager.h
                 dep/SimplexNoise.cpp dep/SimplexNoise.h
                 Chunk.cpp Chunk.h

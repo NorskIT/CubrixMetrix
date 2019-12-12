@@ -32,7 +32,6 @@ CMakeFiles/mikecraft.dir/main.cpp.o: ../ChunkManager.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../Cube.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../FlyCamera.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../Shader.h
-CMakeFiles/mikecraft.dir/main.cpp.o: ../camera.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../dep/SimplexNoise.h
 CMakeFiles/mikecraft.dir/main.cpp.o: ../main.cpp
 CMakeFiles/mikecraft.dir/main.cpp.o: ../stb_image.h

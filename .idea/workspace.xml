@@ -19,16 +19,18 @@
   <component name="ChangeListManager">
     <list default="true" id="2f42a0ff-6c92-470d-9a2f-9015e8f77111" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Chunk.h" beforeDir="false" afterPath="$PROJECT_DIR$/Chunk.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChunkManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/ChunkManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cube.h" beforeDir="false" afterPath="$PROJECT_DIR$/Cube.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlyCamera.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlyCamera.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camera.h" beforeDir="false" afterPath="$PROJECT_DIR$/camera.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shader.h" beforeDir="false" afterPath="$PROJECT_DIR$/Shader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/camera.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/CXX.includecache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/Chunk.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/Chunk.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/ChunkManager.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/ChunkManager.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/Shader.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/Shader.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/mikecraft.dir/main.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/mikecraft" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/mikecraft" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/mikecraft.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/mikecraft.cbp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -171,7 +173,7 @@
       <workItem from="1575801518740" duration="5422000" />
       <workItem from="1575968087179" duration="2042000" />
       <workItem from="1575984898301" duration="4917000" />
-      <workItem from="1576134031337" duration="16540000" />
+      <workItem from="1576134031337" duration="19511000" />
     </task>
     <servers />
   </component>
@@ -192,25 +194,29 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state width="1807" height="173" key="GridCell.Tab.0.bottom" timestamp="1576152231625">
+    <state x="1806" y="1142" width="524" height="510" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1576154778656">
       <screen x="1080" y="840" width="1920" height="1080" />
     </state>
-    <state width="1807" height="173" key="GridCell.Tab.0.bottom/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576152231625" />
+    <state x="1806" y="1142" width="524" height="510" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576154778656" />
+    <state width="1807" height="173" key="GridCell.Tab.0.bottom" timestamp="1576156512533">
+      <screen x="1080" y="840" width="1920" height="1080" />
+    </state>
+    <state width="1807" height="173" key="GridCell.Tab.0.bottom/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576156512533" />
     <state width="1874" height="179" key="GridCell.Tab.0.bottom/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@3000.840.1920.1080" timestamp="1575816553370" />
-    <state width="1807" height="173" key="GridCell.Tab.0.center" timestamp="1576152231625">
+    <state width="1807" height="173" key="GridCell.Tab.0.center" timestamp="1576156512533">
       <screen x="1080" y="840" width="1920" height="1080" />
     </state>
-    <state width="1807" height="173" key="GridCell.Tab.0.center/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576152231625" />
+    <state width="1807" height="173" key="GridCell.Tab.0.center/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576156512533" />
     <state width="1874" height="179" key="GridCell.Tab.0.center/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@3000.840.1920.1080" timestamp="1575816553369" />
-    <state width="1807" height="173" key="GridCell.Tab.0.left" timestamp="1576152231625">
+    <state width="1807" height="173" key="GridCell.Tab.0.left" timestamp="1576156512533">
       <screen x="1080" y="840" width="1920" height="1080" />
     </state>
-    <state width="1807" height="173" key="GridCell.Tab.0.left/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576152231625" />
+    <state width="1807" height="173" key="GridCell.Tab.0.left/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576156512533" />
     <state width="1874" height="179" key="GridCell.Tab.0.left/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@3000.840.1920.1080" timestamp="1575816553369" />
-    <state width="1807" height="173" key="GridCell.Tab.0.right" timestamp="1576152231625">
+    <state width="1807" height="173" key="GridCell.Tab.0.right" timestamp="1576156512533">
       <screen x="1080" y="840" width="1920" height="1080" />
     </state>
-    <state width="1807" height="173" key="GridCell.Tab.0.right/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576152231625" />
+    <state width="1807" height="173" key="GridCell.Tab.0.right/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@1080.840.1920.1080" timestamp="1576156512533" />
     <state width="1874" height="179" key="GridCell.Tab.0.right/1080.840.1920.1080/0.867.1080.1053/3000.840.1920.1080@3000.840.1920.1080" timestamp="1575816553369" />
     <state width="1807" height="348" key="GridCell.Tab.1.bottom" timestamp="1576147714991">
       <screen x="1080" y="840" width="1920" height="1080" />
@@ -243,7 +249,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/ChunkManager.h</url>
-          <line>238</line>
+          <line>241</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>

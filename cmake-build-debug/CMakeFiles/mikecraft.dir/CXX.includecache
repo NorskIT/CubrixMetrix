@@ -90,19 +90,11 @@ Chunk.h
 math.h
 -
 
-/home/mike/CLionProjects/mikecraft/Cube.cpp
-Cube.h
-/home/mike/CLionProjects/mikecraft/Cube.h
-
 /home/mike/CLionProjects/mikecraft/Cube.h
 glm/vec3.hpp
 -
 vector
 -
-
-/home/mike/CLionProjects/mikecraft/FlyCamera.cpp
-FlyCamera.h
-/home/mike/CLionProjects/mikecraft/FlyCamera.h
 
 /home/mike/CLionProjects/mikecraft/FlyCamera.h
 glad/glad.h
@@ -130,16 +122,6 @@ iostream
 sstream
 -
 
-/home/mike/CLionProjects/mikecraft/camera.h
-glad/glad.h
--
-glm/glm.hpp
--
-vector
--
-glm/gtc/matrix_transform.hpp
--
-
 /home/mike/CLionProjects/mikecraft/dep/SimplexNoise.h
 cstddef
 -
@@ -149,14 +131,12 @@ glad/glad.h
 -
 GLFW/glfw3.h
 -
-camera.h
-/home/mike/CLionProjects/mikecraft/camera.h
-Shader.h
-/home/mike/CLionProjects/mikecraft/Shader.h
 stb_image.h
 /home/mike/CLionProjects/mikecraft/stb_image.h
 Cube.h
 /home/mike/CLionProjects/mikecraft/Cube.h
+Shader.h
+/home/mike/CLionProjects/mikecraft/Shader.h
 ChunkManager.h
 /home/mike/CLionProjects/mikecraft/ChunkManager.h
 FlyCamera.h

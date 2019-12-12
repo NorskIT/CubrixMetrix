@@ -1,11 +1,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "camera.h"
-#include "Shader.h"
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "Cube.h"
+#include "Shader.h"
 #include "ChunkManager.h"
 #include "FlyCamera.h"
 #include <glm/glm.hpp>
@@ -92,17 +90,22 @@ int main()
     //Enable depth, without everything draws on top of eachother
     glEnable(GL_DEPTH_TEST);
 
+    //Create shader
     Shader shader("../shaders/shader.vert", "../shaders/shader.frag");
 
+    //Generate vertex and buffers.
     glGenVertexArrays(3, cubeVAO);
     glGenBuffers(3, VBO);
 
+    //Create chunkManager, use player pos as start pos.
     chunkManager = ChunkManager(flyCamera.position);
     RenderWorld();
 
+    //Create pointers for textures.
     unsigned int grass = loadTexture("../images/grassWide.jpg");
     unsigned int water = loadTexture("../images/water.png");
 
+    //Use our shader program
     glUseProgram(shader.ID);
     glUniform1i(glGetUniformLocation(shader.ID, "diffuseMaterial"), 0);
 
@@ -135,8 +138,11 @@ int main()
         //Enable our shader program
         glUseProgram(shader.ID);
         glUniform3f(glGetUniformLocation(shader.ID, "ViewPos"), flyCamera.position.x, flyCamera.position.y, flyCamera.position.z);
+        //Set sets projection as our camera projection
         glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, &projection[0][0]);
+        //Set sets projection as our camera view
         glUniformMatrix4fv(glGetUniformLocation(shader.ID, "view"), 1, GL_FALSE, &view[0][0]);
+        //Set model as identity model
         glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, &glm::mat4(1.0f)[0][0]);
 
         //Draw all our vertices
@@ -192,16 +198,12 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
         flyCamera.UpdateCamera(FlyCamera::DESCEND);
 
-    /*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-    {
-        chunkManager.water = {};
-    }*/
-
 
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    //Makes the scene scaleable
     glViewport(0, 0, width, height);
 
 }
@@ -232,18 +234,11 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
      *      alt+forward scroll locks cursor.
      *      alt+backward scroll unlocks cursor
      *
-     *      shift+forward scroll increases FOV
-     *      shift+forward scroll decreases FOV
-     *
      *      forward scroll increased movement speed
      *      forward scroll decreases resets movement speed
      */
     if(yoffset > 0) {
-        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        {
-            zoomVariable += 0.2;
-        }
-        else if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             mouseIsDisabled = false;
@@ -251,11 +246,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
             flyCamera.flightSpeed += 0.1;
         }
     } else {
-        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        {
-            zoomVariable -= 0.2;
-        }
-        else if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             mouseIsDisabled = true;
@@ -270,10 +261,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
  */
 void RenderWorld()
 {
-    /*
-     * VBO[0] contains all terrain vertices.
-     * VBO[1] contains all water vertices.
-     */
+
+    //VBO[0] contains all terrain vertices. VBO[1] contains all water vertices.
     VertexAttribArray(chunkManager.world, VBO[0], cubeVAO[0]);
     if(showWater)
     {
@@ -302,7 +291,7 @@ void VertexAttribArray(std::vector<float> vertices, unsigned int vertexBuffer, u
 }
 
 /**
- * Loads in binds texture into TexImage2D
+ * Loads and binds texture into TexImage2D
  * @param path, path to texture
  * @return unsigned int reference to texture
  */

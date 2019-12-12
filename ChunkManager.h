@@ -18,6 +18,9 @@
 /**
  * The Chunk manager manages all the chunks generated
  */
+
+static const long seed = rand()%(100000);
+
 class ChunkManager {
 
     //Think of a chunk as flat quad with 4 sides. These are the names representing the sides.
@@ -28,24 +31,23 @@ class ChunkManager {
         RIGHT
     };
 
-
 public:
     //Main list containing all vertices for terrain
     std::vector<float> world;
     //Main list containing al vertices for water
     std::vector<float> water;
-
     //A bool which is used to check if user has moved out of pre-generated chunks
     bool hasPlayerMoved = false;
 
-    long seed;
-
     ChunkManager() = default;
+    /**
+     * Constructur which starts the startup procedure and sets the seed.
+     * @param playerPos
+     */
     ChunkManager(glm::vec3 playerPos)
     {
         startupGenerateChunk(playerPos);
         //Generate a random seed, so that we wont have to end up with same terrain generation every time.
-        seed = rand()%(1000000-0 + 1);
         std::cout << "seed: " << seed << std::endl;
     }
 
@@ -99,8 +101,9 @@ public:
 
     }
 
-    /*
+    /**
      * Startup function, to generate all chunks around the player at startup
+     * @param playerPosDirection
      */
     void startupGenerateChunk(glm::vec3 playerPosDirection) {
 
@@ -234,7 +237,7 @@ public:
         world.insert(world.end(), chunk.vertices.begin(), chunk.vertices.end());
 
         //While world size exceeds 20m. Delete tails of cached chunk
-        while(world.size() > 20000000)
+        while(world.size() > 40000000)
         {
             world.erase(world.begin(), world.begin()+cachedChunks[0].vertices.size());
             cachedChunks.erase(cachedChunks.begin());

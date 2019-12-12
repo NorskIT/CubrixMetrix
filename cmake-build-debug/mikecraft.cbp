@@ -424,9 +424,6 @@
 		<Unit filename="/home/mike/CLionProjects/mikecraft/Shader.h">
 			<Option target="mikecraft"/>
 		</Unit>
-		<Unit filename="/home/mike/CLionProjects/mikecraft/camera.h">
-			<Option target="mikecraft"/>
-		</Unit>
 		<Unit filename="/home/mike/CLionProjects/mikecraft/cmake-build-debug/includes/glfw-3.3/src/glfw_config.h">
 			<Option target="glfw"/>
 		</Unit>
