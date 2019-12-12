@@ -297,6 +297,7 @@ unsigned int loadTexture(char const * path)
     if (data)
     {
         GLenum format;
+        //Selects format by how many components there are. Exp. Png = nrComponents 4 and normal .jpg = nrComponents 3.
         if (nrComponents == 1)
             format = GL_RED;
         else if (nrComponents == 3)
@@ -316,7 +317,7 @@ unsigned int loadTexture(char const * path)
     }
     else
     {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
+        std::cout << "ERROR: Failed to load img" << std::endl;
         stbi_image_free(data);
     }
 
