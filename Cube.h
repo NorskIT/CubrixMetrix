@@ -17,6 +17,7 @@ class Cube {
 public:
     /**
      * Basic constructor for a single cube/voxel
+     * Creates all the vertices for a complete voxel based on param x,y,z.
      * @param x pos
      * @param y pos
      * @param z pos

@@ -50,6 +50,10 @@ GL/glu.h
 vulkan/vulkan.h
 -
 
+/home/mike/CLionProjects/mikecraft/Chunk.cpp
+Chunk.h
+/home/mike/CLionProjects/mikecraft/Chunk.h
+
 /home/mike/CLionProjects/mikecraft/Chunk.h
 vector
 -
@@ -63,6 +67,10 @@ glm/gtc/noise.hpp
 /home/mike/CLionProjects/mikecraft/glm/gtc/noise.hpp
 dep/SimplexNoise.h
 /home/mike/CLionProjects/mikecraft/dep/SimplexNoise.h
+
+/home/mike/CLionProjects/mikecraft/ChunkManager.cpp
+ChunkManager.h
+/home/mike/CLionProjects/mikecraft/ChunkManager.h
 
 /home/mike/CLionProjects/mikecraft/ChunkManager.h
 vector
@@ -79,12 +87,22 @@ dep/SimplexNoise.h
 /home/mike/CLionProjects/mikecraft/dep/SimplexNoise.h
 Chunk.h
 /home/mike/CLionProjects/mikecraft/Chunk.h
+math.h
+-
+
+/home/mike/CLionProjects/mikecraft/Cube.cpp
+Cube.h
+/home/mike/CLionProjects/mikecraft/Cube.h
 
 /home/mike/CLionProjects/mikecraft/Cube.h
 glm/vec3.hpp
 -
 vector
 -
+
+/home/mike/CLionProjects/mikecraft/FlyCamera.cpp
+FlyCamera.h
+/home/mike/CLionProjects/mikecraft/FlyCamera.h
 
 /home/mike/CLionProjects/mikecraft/FlyCamera.h
 glad/glad.h
@@ -94,6 +112,8 @@ glm/glm.hpp
 vector
 -
 glm/gtc/matrix_transform.hpp
+-
+iostream
 -
 
 /home/mike/CLionProjects/mikecraft/Shader.h

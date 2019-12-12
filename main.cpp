@@ -37,7 +37,7 @@ unsigned int cubeVAO[2], lightVAO;
 bool mouseIsDisabled = true;
 
 // Create camera, set it to the center of first chunk
-Camera camera(glm::vec3((CHUNK_WIDTH/2), CHUNK_HEIGHT, (CHUNK_WIDTH/2)));
+//Camera camera(glm::vec3((CHUNK_WIDTH/2), CHUNK_HEIGHT, (CHUNK_WIDTH/2)));
 
 FlyCamera flyCamera(glm::vec3((CHUNK_WIDTH/2), CHUNK_HEIGHT, (CHUNK_WIDTH/2)));
 float lastX = SCR_WIDTH / 2.0f;
@@ -97,7 +97,7 @@ int main()
     glGenVertexArrays(3, cubeVAO);
     glGenBuffers(3, VBO);
 
-    chunkManager = ChunkManager(camera.Position);
+    chunkManager = ChunkManager(flyCamera.position);
     RenderWorld();
 
     unsigned int grass = loadTexture("../images/grassWide.jpg");
@@ -119,22 +119,22 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //Check if player position is outside of current chunk-system.
-        chunkManager.checkPlayerPosition(camera.Position);
+        chunkManager.checkPlayerPosition(flyCamera.position);
 
         //Build title string, showing player position
-        std::string title = "X: " + std::to_string(camera.Position.x-0.5) +
-                " Y: " + std::to_string(camera.Position.y-0.5) +
-                " Z: " + std::to_string(camera.Position.z-0.5);
+        std::string title = "X: " + std::to_string(flyCamera.position.x-0.5) +
+                " Y: " + std::to_string(flyCamera.position.y-0.5) +
+                " Z: " + std::to_string(flyCamera.position.z-0.5);
         //Set string to window title.
         glfwSetWindowTitle(window, title.c_str());
 
         // Create projection mat
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom*zoomVariable), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
-        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
+        glm::mat4 view = flyCamera.GetView();
 
         //Enable our shader program
         glUseProgram(shader.ID);
-        glUniform3f(glGetUniformLocation(shader.ID, "ViewPos"), camera.Position.x, camera.Position.y, camera.Position.z);
+        glUniform3f(glGetUniformLocation(shader.ID, "ViewPos"), flyCamera.position.x, flyCamera.position.y, flyCamera.position.z);
         glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, &projection[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(shader.ID, "view"), 1, GL_FALSE, &view[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, &glm::mat4(1.0f)[0][0]);
@@ -180,22 +180,22 @@ void processInput(GLFWwindow *window)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        flyCamera.UpdateCamera(FlyCamera::FORWARD);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        flyCamera.UpdateCamera(FlyCamera::BACKWARD);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        flyCamera.UpdateCamera(FlyCamera::LEFT);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        flyCamera.UpdateCamera(FlyCamera::RIGHT);
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        camera.ProcessKeyboard(ASCEND, deltaTime);
+        flyCamera.UpdateCamera(FlyCamera::ASCEND);
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-        camera.ProcessKeyboard(DESCEND, deltaTime);
+        flyCamera.UpdateCamera(FlyCamera::DESCEND);
 
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+    /*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
     {
         chunkManager.water = {};
-    }
+    }*/
 
 
 }
@@ -222,7 +222,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    flyCamera.mouseDirectionChange(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -248,7 +248,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             mouseIsDisabled = false;
         } else {
-            camera.MovementSpeed += 20;
+            flyCamera.flightSpeed += 0.1;
         }
     } else {
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
@@ -260,7 +260,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             mouseIsDisabled = true;
         } else {
-            camera.MovementSpeed = 2;
+            flyCamera.flightSpeed = 0.1f;
         }
     }
 }
