@@ -78,7 +78,6 @@ public:
                     float xPos = (x+pos.x);
                     float yPos = (y+pos.y);
                     float zPos = (z+pos.z);
-                    std::cout << seed << std::endl;
 
                     float value = GenerateNoisePoint(xPos, yPos, zPos);
 
@@ -166,7 +165,8 @@ public:
     /**
      * Method for filtering out which side of a cube to draw.
      * Proceeds to check each side of each cube, and only draw that
-     * cube which has an invisible cube in said direction
+     * side of the cube which has an invisible cube in said direction
+     * side of the cube which has an invisible cube in said direction
      */
     void bindChunkIntoVertices()
     {

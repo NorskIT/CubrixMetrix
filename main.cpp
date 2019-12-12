@@ -50,9 +50,6 @@ float lastFrame = 0.0f;
 // Stores all vertices for our world
 ChunkManager chunkManager;
 
-
-
-bool debug = false;
 bool showWater = true;
 
 int main()
@@ -63,7 +60,8 @@ int main()
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "X Y Z", NULL, NULL);
     if (window == NULL)
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        std::cout << "ERROR: Coult not create GLFW window" << std::endl;
+        std::cout << "Terminates program..." << std::endl;
         glfwTerminate();
         return -1;
     }
@@ -185,6 +183,9 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
+    /*
+     * Camera movement listeners
+     */
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         flyCamera.UpdateCamera(FlyCamera::FORWARD);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -208,22 +209,13 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void mouse_callback(GLFWwindow* window, double xPos, double yPos)
 {
     if(mouseIsDisabled) return;
-    if (firstMouse)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos;
-
-    lastX = xpos;
-    lastY = ypos;
-
+    float xoffset = xPos - lastX;
+    float yoffset = lastY - yPos;
+    lastX = xPos;
+    lastY = yPos;
     flyCamera.mouseDirectionChange(xoffset, yoffset);
 }
 
